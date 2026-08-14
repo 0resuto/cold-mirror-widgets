@@ -53,7 +53,8 @@ const mockSessionDrivers = [
 ];
 
 function App() {
-  const [telemetry] = useState(mockTelemetry);
+  const [useMockData, setUseMockData] = useState(false);
+  const telemetry = useMockData ? mockTelemetry : null;
 
   const WidgetBox = ({ children, title, width = "w-[300px]", height = "h-[200px]" }) => (
     <div className="flex flex-col gap-2">
@@ -65,9 +66,29 @@ function App() {
   );
 
   return (
-    <TelemetryProvider telemetry={telemetry} sessionDrivers={mockSessionDrivers} trackLength={5000}>
+    <TelemetryProvider 
+      telemetry={telemetry} 
+      sessionDrivers={useMockData ? mockSessionDrivers : []} 
+      trackLength={useMockData ? 5000 : 0}
+    >
       <div className="min-h-screen bg-[#050505] p-10 font-sans text-white">
-        <h1 className="text-2xl font-black mb-8 text-gray-400">Cold Mirror Widgets Playground</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-black text-gray-400">Cold Mirror Widgets Playground</h1>
+          
+          <label className="fixed top-4 right-4 z-[9999] flex items-center cursor-pointer gap-3 bg-[#111] p-3 rounded-xl border border-gray-700 shadow-2xl hover:bg-[#1a1a1a] transition-all">
+            <span className="text-sm font-bold text-white uppercase tracking-wider">Mock Data</span>
+            <div className="relative">
+              <input 
+                type="checkbox" 
+                className="sr-only" 
+                checked={useMockData}
+                onChange={(e) => setUseMockData(e.target.checked)}
+              />
+              <div className={`block w-12 h-6 rounded-full transition-colors ${useMockData ? 'bg-orange-500' : 'bg-gray-800 border border-gray-600'}`}></div>
+              <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${useMockData ? 'translate-x-6 bg-white' : 'bg-gray-400 translate-x-0'}`}></div>
+            </div>
+          </label>
+        </div>
         
         <div className="flex gap-8 flex-wrap items-start">
           

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useSyncExternalStore } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect, useSyncExternalStore } from 'react';
 
 const TelemetryContext = createContext(null);
 
@@ -25,16 +25,9 @@ export function TelemetryProvider({ children, telemetry, sessionDrivers = [], tr
     };
   });
 
-  // Render-phase sync to prevent one-frame layout tearing
-  const prevProps = useRef({ telemetry, sessionDrivers, trackLength });
-  if (
-    prevProps.current.telemetry !== telemetry ||
-    prevProps.current.sessionDrivers !== sessionDrivers ||
-    prevProps.current.trackLength !== trackLength
-  ) {
-    prevProps.current = { telemetry, sessionDrivers, trackLength };
+  useEffect(() => {
     store.setState({ latestTelemetry: telemetry, sessionDrivers, trackLength });
-  }
+  }, [telemetry, sessionDrivers, trackLength, store]);
 
   return (
     <TelemetryContext.Provider value={store}>
