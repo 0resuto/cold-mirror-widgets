@@ -103,27 +103,19 @@ function App() {
             <LiveFuel />
           </WidgetBox>
 
-          <WidgetBox title="Input Trace" width="w-[320px]" height="h-[180px]">
-            <LiveInputs />
-          </WidgetBox>
-
-          <WidgetBox title="Weather" width="w-[320px]" height="h-[180px]">
-            <LiveWeather />
-          </WidgetBox>
-
-          <WidgetBox title="Pit Helper" width="w-[280px]" height="h-[180px]">
+          <WidgetBox title="Pit Helper" width="w-[310px]" height="h-[180px]">
             <PitHelper />
           </WidgetBox>
 
-          <WidgetBox title="Radar" width="w-[280px]" height="h-[280px]">
+          <WidgetBox title="Weather" width="w-[420px]" height="h-[120px]">
+            <LiveWeather />
+          </WidgetBox>
+
+          <WidgetBox title="Radar" width="w-[224px]" height="h-[280px]">
             <LiveRadar />
           </WidgetBox>
 
-          <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]">
-            <DigitalDash />
-          </WidgetBox>
-
-          <WidgetBox title="Live Relative" width="w-[400px]" height="h-[300px]">
+          <WidgetBox title="Live Relative" width="w-[440px]" height="h-[300px]">
             <LiveRelative />
           </WidgetBox>
 
@@ -133,9 +125,19 @@ function App() {
 
         </div>
         
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col gap-8">
            <WidgetBox title="Linear Track Map" width="w-full max-w-[1200px]" height="h-[120px]">
             <LinearTrackMap />
+          </WidgetBox>
+
+          <WidgetBox title="Input Trace" width="w-full max-w-[1200px]" height="h-[135px]">
+            <LiveInputs />
+          </WidgetBox>
+        </div>
+
+        <div className="mt-8 flex gap-8 flex-wrap items-start">
+          <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]">
+            <DigitalDash />
           </WidgetBox>
         </div>
 
