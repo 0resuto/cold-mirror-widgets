@@ -67,18 +67,36 @@ const mockSessionData = {
   }
 };
 
-function App() {
-  const [useMockData, setUseMockData] = useState(false);
-  const telemetry = useMockData ? mockTelemetry : null;
-
-  const WidgetBox = ({ children, title, width = "w-[300px]", height = "h-[200px]" }) => (
-    <div className="flex flex-col gap-2">
-      <span className="text-xs font-bold text-brand-10 uppercase tracking-widest">{title}</span>
-      <div className={`${width} ${height} resize rounded-lg overflow-hidden border border-brand-60/50 bg-brand-bg/80 backdrop-blur-md shadow-2xl relative flex items-center justify-center min-w-[100px] min-h-[50px]`}>
+const WidgetBox = ({ children, title, isLocked, widgetOpacity, bgOpacity, width = "w-[300px]", height = "h-[200px]" }) => (
+  <div className="flex flex-col gap-2">
+    <span className={`text-xs font-bold text-brand-10 uppercase tracking-widest transition-opacity ${isLocked ? 'opacity-0' : 'opacity-100'}`}>{title}</span>
+    <div 
+      className={`${width} ${height} ${isLocked ? '' : 'resize'} rounded-lg relative flex items-center justify-center min-w-[100px] min-h-[50px] transition-colors duration-300 ${
+        !isLocked 
+          ? 'border border-brand-60/50 bg-brand-bg/80 backdrop-blur-md shadow-2xl' 
+          : 'border border-transparent bg-transparent'
+      } overflow-hidden`}
+    >
+      <div 
+        className="w-full h-full transition-opacity duration-75"
+        style={{ 
+          opacity: widgetOpacity / 100,
+          '--widget-bg-color': `rgba(30, 30, 36, ${bgOpacity / 100})` 
+        }}
+      >
         {children}
       </div>
     </div>
-  );
+  </div>
+);
+
+function App() {
+  const [useMockData, setUseMockData] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [widgetOpacity, setWidgetOpacity] = useState(100);
+  const [bgOpacity, setBgOpacity] = useState(60);
+
+  const telemetry = useMockData ? mockTelemetry : null;
 
   return (
     <TelemetryProvider 
@@ -91,62 +109,90 @@ function App() {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-black text-brand-10">Cold Mirror Widgets Playground</h1>
           
-          <label className="fixed top-4 right-4 z-[9999] flex items-center cursor-pointer gap-3 bg-brand-bg p-3 rounded-xl border border-brand-60/50 shadow-2xl hover:bg-brand-60/20 transition-all">
-            <span className="text-sm font-bold text-brand-10 uppercase tracking-wider">Mock Data</span>
-            <div className="relative">
-              <input 
-                type="checkbox" 
-                className="sr-only" 
-                checked={useMockData}
-                onChange={(e) => setUseMockData(e.target.checked)}
-              />
-              <div className={`block w-12 h-6 rounded-full transition-colors border ${useMockData ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
-              <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${useMockData ? 'translate-x-6 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
+          <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-4 bg-brand-bg/95 backdrop-blur-md p-4 rounded-xl border border-brand-60/50 shadow-2xl min-w-[200px]">
+            {/* Mock Data */}
+            <label className="flex items-center justify-between cursor-pointer gap-4 hover:opacity-80 transition-opacity">
+              <span className="text-sm font-bold text-brand-10 uppercase tracking-wider">Mock Data</span>
+              <div className="relative">
+                <input type="checkbox" className="sr-only" checked={useMockData} onChange={(e) => setUseMockData(e.target.checked)} />
+                <div className={`block w-10 h-5 rounded-full transition-colors border ${useMockData ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
+                <div className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${useMockData ? 'translate-x-5 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
+              </div>
+            </label>
+
+            {/* Lock Widgets */}
+            <label className="flex items-center justify-between cursor-pointer gap-4 hover:opacity-80 transition-opacity">
+              <span className="text-sm font-bold text-brand-10 uppercase tracking-wider" title="Эмуляция блокировки виджетов (isLocked)">Locked</span>
+              <div className="relative">
+                <input type="checkbox" className="sr-only" checked={isLocked} onChange={(e) => setIsLocked(e.target.checked)} />
+                <div className={`block w-10 h-5 rounded-full transition-colors border ${isLocked ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
+                <div className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${isLocked ? 'translate-x-5 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
+              </div>
+            </label>
+
+            <div className="w-full h-[1px] bg-brand-60/30"></div>
+
+            {/* Widget Opacity */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-xs font-bold text-brand-10/80 uppercase tracking-wider">Widget Opacity</span>
+                <span className="text-xs font-mono text-brand-30">{widgetOpacity}%</span>
+              </div>
+              <input type="range" min="10" max="100" value={widgetOpacity} onChange={e => setWidgetOpacity(e.target.value)} className="w-full h-1 bg-brand-60/40 rounded-lg appearance-none cursor-pointer accent-brand-30" />
             </div>
-          </label>
+
+            {/* BG Opacity */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-xs font-bold text-brand-10/80 uppercase tracking-wider">BG Opacity</span>
+                <span className="text-xs font-mono text-brand-30">{bgOpacity}%</span>
+              </div>
+              <input type="range" min="0" max="100" value={bgOpacity} onChange={e => setBgOpacity(e.target.value)} className="w-full h-1 bg-brand-60/40 rounded-lg appearance-none cursor-pointer accent-brand-30" />
+            </div>
+          </div>
         </div>
         
         <div className="flex gap-8 flex-wrap items-start">
           
-          <WidgetBox title="Fuel Calculator" width="w-[280px]" height="h-[150px]">
-            <LiveFuel />
+          <WidgetBox title="Fuel Calculator" width="w-[280px]" height="h-[150px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveFuel isLocked={isLocked} />
           </WidgetBox>
 
-          <WidgetBox title="Pit Helper" width="w-[310px]" height="h-[150px]">
-            <PitHelper />
+          <WidgetBox title="Pit Helper" width="w-[310px]" height="h-[150px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <PitHelper isLocked={isLocked} />
           </WidgetBox>
 
-          <WidgetBox title="Weather" width="w-[420px]" height="h-[120px]">
-            <LiveWeather />
+          <WidgetBox title="Weather" width="w-[420px]" height="h-[120px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveWeather isLocked={isLocked} />
           </WidgetBox>
 
-          <WidgetBox title="Live Standings" width="w-[900px]" height="h-[300px]">
-            <LiveStandings columns={{ pos: true, num: true, driver: true, carName: true, carClass: true, classPos: true, srating: true, irating: true, gap: true, bestLap: true, lastLap: true, trackPct: true, laps: true }} />
+          <WidgetBox title="Live Standings" width="w-[900px]" height="h-[300px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveStandings isLocked={isLocked} columns={{ pos: true, num: true, driver: true, carName: true, carClass: true, classPos: true, srating: true, irating: true, gap: true, bestLap: true, lastLap: true, trackPct: true, laps: true }} />
           </WidgetBox>
 
-          <WidgetBox title="Live Relative" width="w-[580px]" height="h-[300px]">
-            <LiveRelative />
+          <WidgetBox title="Live Relative" width="w-[580px]" height="h-[300px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveRelative isLocked={isLocked} />
           </WidgetBox>
 
-          <WidgetBox title="Radar" width="w-[200px]" height="h-[280px]">
-            <LiveRadar />
+          <WidgetBox title="Radar" width="w-[200px]" height="h-[280px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveRadar isLocked={isLocked} />
           </WidgetBox>
 
         </div>
         
         <div className="mt-8 flex flex-col gap-8">
-           <WidgetBox title="Linear Track Map" width="w-full max-w-[1200px]" height="h-[70px]">
-            <LinearTrackMap />
+           <WidgetBox title="Linear Track Map" width="w-full max-w-[1200px]" height="h-[70px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LinearTrackMap isLocked={isLocked} />
           </WidgetBox>
 
-          <WidgetBox title="Input Trace" width="w-full max-w-[1200px]" height="h-[135px]">
-            <LiveInputs />
+          <WidgetBox title="Input Trace" width="w-full max-w-[1200px]" height="h-[135px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <LiveInputs isLocked={isLocked} />
           </WidgetBox>
         </div>
 
         <div className="mt-8 flex gap-8 flex-wrap items-start">
-          <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]">
-            <DigitalDash />
+          <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
+            <DigitalDash isLocked={isLocked} />
           </WidgetBox>
         </div>
 

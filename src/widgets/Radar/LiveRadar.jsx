@@ -5,7 +5,7 @@ import { LoadingState } from '../../components/LoadingState';
 
 const RADAR_RANGE_METERS = 30; // Zoomed in to show cars within 30 meters ahead/behind
 
-export function LiveRadar({ rangeMeters = 30, throttleMs = 33 }) {
+export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false }) {
   const liveStore = useLiveStore();
   const [radarState, setRadarState] = useState({
     carLeftRight: 0,
@@ -94,7 +94,14 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33 }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-2">
+    <div 
+      className={`w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-2 rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       
       {/* Track Background Line */}
       <div className="absolute top-0 bottom-0 w-20 bg-brand-60/10 rounded-full"></div>

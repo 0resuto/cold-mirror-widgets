@@ -9,7 +9,8 @@ export function LiveFuel({
   maxFuel = 100,
   lowFuelThreshold = 15,
   criticalFuelThreshold = 5,
-  throttleMs = 200
+  throttleMs = 200,
+  isLocked = false
 }) {
   const liveStore = useLiveStore();
   const [fuelData, setFuelData] = useState({ level: 0, usage: 0, lapsRemaining: 0 });
@@ -52,7 +53,14 @@ export function LiveFuel({
   const fuelPct = Math.min(100, Math.max(0, (fuelData.level / maxFuel) * 100));
 
   return (
-    <div className="flex flex-col h-full w-full font-sans overflow-hidden">
+    <div 
+      className={`flex flex-col h-full w-full font-sans overflow-hidden rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       <div className="flex-1 flex flex-col justify-center p-4 gap-4">
         
         <div className="flex justify-between items-end">

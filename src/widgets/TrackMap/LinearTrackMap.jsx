@@ -4,7 +4,7 @@ import { useTelemetryStore as useLiveStore } from '../../context/TelemetryContex
 import { Wrench, Timer } from 'lucide-react';
 import { LoadingState } from '../../components/LoadingState';
 
-export function LinearTrackMap({ throttleMs = 66 }) {
+export function LinearTrackMap({ throttleMs = 66, isLocked = false }) {
   const liveStore = useLiveStore();
   const [gridData, setGridData] = useState({});
   const [playerIdx, setPlayerIdx] = useState(null);
@@ -40,7 +40,14 @@ export function LinearTrackMap({ throttleMs = 66 }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col justify-center px-4">
+    <div 
+      className={`w-full h-full flex flex-col justify-center px-4 rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       
       {/* The main track line */}
       <div className="relative w-full h-2 bg-brand-60/30 rounded-full my-auto shadow-inner border border-black/20">

@@ -84,9 +84,14 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
   }
 
   return (
-    <div className={`flex flex-col w-full h-full rounded-xl overflow-hidden transition-all duration-300 ${
-      isLocked ? 'bg-transparent border-transparent' : 'bg-brand-bg/60 border border-brand-60/60 shadow-xl backdrop-blur-sm'
-    }`}>
+    <div 
+      className={`flex flex-col w-full h-fit max-h-full rounded-xl overflow-hidden transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <table className="w-full text-left border-collapse">
           <thead className={`sticky top-0 z-10 shadow-sm transition-colors ${isLocked ? 'bg-brand-60/95 backdrop-blur-md' : 'bg-brand-60/80'}`}>
@@ -119,9 +124,9 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   key={driver.CarIdx} 
                   className={`border-b transition-colors ${
-                    isPaceCar ? 'opacity-50 border-brand-60/20 bg-brand-bg' : 
-                    isPlayer ? 'bg-brand-bg bg-gradient-to-r from-white/20 to-white/5 border-white/30 shadow-[0_3px_8px_rgba(0,0,0,0.4),0_1px_0_#2b2d34,0_-1px_0_#2b2d34,inset_0_1px_0_rgba(255,255,255,0.15)] relative z-20' : 
-                    'bg-brand-bg border-brand-60/20 hover:bg-brand-60/30'
+                    isPaceCar ? 'opacity-50 border-brand-60/20' : 
+                    isPlayer ? 'bg-gradient-to-r from-white/20 to-white/5 border-white/30 shadow-[0_3px_8px_rgba(0,0,0,0.4),0_1px_0_#2b2d34,0_-1px_0_#2b2d34,inset_0_1px_0_rgba(255,255,255,0.15)] relative z-20' : 
+                    'border-brand-60/20 hover:bg-brand-60/30'
                   }`}
                 >
                   {columns.pos && (

@@ -5,7 +5,7 @@ import { Fuel, Wrench, CircleDashed } from 'lucide-react';
 import { LoadingState } from '../../components/LoadingState';
 import { ProgressBar } from '../../components/ProgressBar';
 
-export function PitHelper({ units = 'kph', throttleMs = 33 }) {
+export function PitHelper({ units = 'kph', throttleMs = 33, isLocked = false }) {
   const liveStore = useLiveStore();
   const [data, setData] = useState({
     speed: 0,
@@ -78,7 +78,14 @@ export function PitHelper({ units = 'kph', throttleMs = 33 }) {
   }
 
   return (
-    <div className={`w-full h-full flex flex-col font-sans overflow-hidden ${isSpeeding ? 'bg-red-600/90 shadow-[0_0_50px_rgba(220,38,38,0.8)]' : 'bg-transparent'}`}>
+    <div 
+      className={`w-full h-full flex flex-col font-sans overflow-hidden rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      } ${isSpeeding ? 'bg-red-600/90 shadow-[0_0_50px_rgba(220,38,38,0.8)]' : ''}`}
+      style={{
+        backgroundColor: isSpeeding ? undefined : 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       {/* Speedometer Area */}
       <div className="flex-1 flex flex-col justify-center px-4 relative">
         <div className="flex justify-between items-end mb-2">

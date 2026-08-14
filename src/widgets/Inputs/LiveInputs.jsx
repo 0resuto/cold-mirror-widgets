@@ -7,7 +7,7 @@ import { Gamepad2 } from 'lucide-react';
 
 const MAX_HISTORY = 90; // 3 seconds at 30Hz
 
-export function LiveInputs({ throttleMs = 33 }) {
+export function LiveInputs({ throttleMs = 33, isLocked = false }) {
   const liveStore = useLiveStore();
   const [inputs, setInputs] = useState({
     throttle: 0,
@@ -93,7 +93,14 @@ export function LiveInputs({ throttleMs = 33 }) {
   }
 
   return (
-    <div className="flex flex-col h-full w-full font-sans overflow-hidden">
+    <div 
+      className={`w-full h-full flex flex-col p-4 gap-2 font-sans overflow-hidden rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       <div className="flex-1 flex p-2 gap-2">
         
         {/* Left column: Gear & Speed */}

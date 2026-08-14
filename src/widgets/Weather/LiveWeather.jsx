@@ -4,7 +4,7 @@ import { useTelemetryStore as useLiveStore } from '../../context/TelemetryContex
 import { Thermometer, Wind, Navigation, Cloud } from 'lucide-react';
 import { LoadingState } from '../../components/LoadingState';
 
-export function LiveWeather({ tempUnit = 'C', speedUnit = 'ms', throttleMs = 250 }) {
+export function LiveWeather({ tempUnit = 'C', speedUnit = 'ms', throttleMs = 250, isLocked = false }) {
   const liveStore = useLiveStore();
   const [weather, setWeather] = useState({ AirTemp: 0, TrackTemp: 0, WindVel: 0, WindDir: 0, Yaw: 0 });
   const [hasData, setHasData] = useState(false);
@@ -43,7 +43,14 @@ export function LiveWeather({ tempUnit = 'C', speedUnit = 'ms', throttleMs = 250
   const windVelDisp = speedUnit === 'kmh' ? weather.WindVel * 3.6 : speedUnit === 'mph' ? weather.WindVel * 2.23694 : weather.WindVel;
 
   return (
-    <div className="w-full h-full flex flex-row items-center justify-center gap-4 px-2">
+    <div 
+      className={`w-full h-full flex flex-row items-center justify-center gap-4 px-2 rounded-xl transition-all duration-300 ${
+        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
+      }`}
+      style={{
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+      }}
+    >
       
       {/* Air Temperature */}
       <div className="flex items-center gap-2 shrink-0">
