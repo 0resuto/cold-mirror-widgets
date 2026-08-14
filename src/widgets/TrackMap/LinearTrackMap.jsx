@@ -86,10 +86,14 @@ export function LinearTrackMap({ throttleMs = 66 }) {
             >
               {/* Status Icons (above the car) */}
               {(car.OnPitRoad || car.HasDamage || car.IsFastestLap) && (
-                <div className="absolute bottom-full mb-1 flex gap-[2px]">
-                  {car.HasDamage && <Wrench size={10} className="text-orange-500 drop-shadow-md" />}
-                  {car.IsFastestLap && <Timer size={10} className="text-purple-400 drop-shadow-md" />}
-                  {car.OnPitRoad && <div className="bg-yellow-500 text-black text-[7px] font-bold px-1 rounded-sm">PIT</div>}
+                <div className="absolute bottom-full mb-2.5 flex justify-center w-full">
+                  {car.OnPitRoad ? (
+                    <div className="bg-yellow-500 text-black text-[9px] font-bold px-1 rounded-sm">PIT</div>
+                  ) : car.HasDamage ? (
+                    <Wrench size={12} className="text-orange-500 drop-shadow-md" />
+                  ) : car.IsFastestLap ? (
+                    <Timer size={12} className="text-purple-400 drop-shadow-md" />
+                  ) : null}
                 </div>
               )}
 
@@ -102,7 +106,7 @@ export function LinearTrackMap({ throttleMs = 66 }) {
 
               {/* Position Number Label (below the car) */}
               {!isPlayer && (
-                 <div className="absolute top-full mt-[2px] text-[8px] font-mono font-bold text-white/60">
+                 <div className="absolute top-full mt-2 text-[10px] font-mono font-bold text-white/60">
                    P{car.Position}
                  </div>
               )}

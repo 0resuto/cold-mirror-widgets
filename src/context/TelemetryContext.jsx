@@ -2,11 +2,12 @@ import React, { createContext, useContext, useState, useRef, useEffect, useSyncE
 
 const TelemetryContext = createContext(null);
 
-export function TelemetryProvider({ children, telemetry, sessionDrivers = [], trackLength = 0 }) {
+export function TelemetryProvider({ children, telemetry, sessionDrivers = [], sessionData = null, trackLength = 0 }) {
   const [store] = useState(() => {
     let state = {
       latestTelemetry: telemetry,
       sessionDrivers,
+      sessionData,
       trackLength,
     };
     
@@ -26,8 +27,8 @@ export function TelemetryProvider({ children, telemetry, sessionDrivers = [], tr
   });
 
   useEffect(() => {
-    store.setState({ latestTelemetry: telemetry, sessionDrivers, trackLength });
-  }, [telemetry, sessionDrivers, trackLength, store]);
+    store.setState({ latestTelemetry: telemetry, sessionDrivers, sessionData, trackLength });
+  }, [telemetry, sessionDrivers, sessionData, trackLength, store]);
 
   return (
     <TelemetryContext.Provider value={store}>

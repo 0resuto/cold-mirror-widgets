@@ -112,7 +112,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33 }) {
       </div>
 
       {/* Nearby Cars */}
-      {nearbyCars.map(car => {
+      {nearbyCars.map((car, i) => {
         const topPct = getYPos(car.distance);
         
         // Pseudo-logic for lateral position:
@@ -122,7 +122,10 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33 }) {
 
         // Since cars are 20% height (5m), they visually touch at exactly 5m center-to-center
         if (Math.abs(car.distance) < 5) {
-          if (isLeft) {
+          if (isLeft && isRight) {
+            leftOffset = i % 2 === 0 ? '20%' : '80%';
+            isDanger = true;
+          } else if (isLeft) {
             leftOffset = '20%';
             isDanger = true;
           } else if (isRight) {

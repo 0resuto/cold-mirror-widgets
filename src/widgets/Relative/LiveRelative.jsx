@@ -5,7 +5,7 @@ import { LoadingState } from '../../components/LoadingState';
 import { motion } from 'framer-motion';
 import { ClassBadge, SafetyRatingBadge } from '../../components/DriverBadges';
 
-const defaultRelativeColumns = { classBadge: true, num: true, driver: true, irating: true, srating: true };
+const defaultRelativeColumns = { pos: true, classBadge: true, num: true, driver: true, carName: true, irating: true, srating: true };
 
 export function LiveRelative({ columns = defaultRelativeColumns, isLocked = false, throttleMs = 66 }) {
   const liveStore = useLiveStore();
@@ -54,7 +54,9 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
           carIdx: Number(carIdx),
           name: driverInfo.UserName,
           carNumber: driverInfo.CarNumberRaw || driverInfo.CarNumber || '0',
-          irating: driverInfo.iRating,
+          carName: driverInfo.CarScreenNameShort || driverInfo.CarScreenName || driverInfo.CarPath || 'Unknown',
+          pos: driverGrid?.Position || 0,
+          irating: driverInfo.iRating ?? driverInfo.IRating,
           license: driverInfo.LicString,
           licLevel: driverInfo.LicLevel,
           carClassColor: driverInfo.CarClassColor,
@@ -94,11 +96,13 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
         <table className="w-full text-left border-collapse">
           <thead className={`sticky top-0 z-10 shadow-sm transition-colors ${isLocked ? 'bg-brand-60/95 backdrop-blur-md' : 'bg-brand-60/80'}`}>
             <tr>
+              {columns.pos && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-8 text-center">POS</th>}
               {columns.classBadge && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-center">Class</th>}
               {columns.num && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-8 text-center">#</th>}
               {columns.driver && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-full">Driver</th>}
+              {columns.carName && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-24 text-center">Car</th>}
               {columns.srating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-center">SR</th>}
-              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-right">IR</th>}
+              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-center">IR</th>}
               <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-right">Delta</th>
             </tr>
           </thead>
@@ -118,6 +122,11 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
                     'bg-brand-bg border-brand-60/20 hover:bg-brand-60/30'
                   }`}
                 >
+                  {columns.pos && (
+                    <td className={`py-1 px-3 text-center font-bold border-l-4 ${isPlayer ? 'text-white border-white/40 bg-white/5' : 'text-brand-10/90 border-transparent'}`}>
+                      {driver.pos > 0 ? driver.pos : '-'}
+                    </td>
+                  )}
                   {columns.classBadge && (
                     <td className="py-1 px-3 text-center">
                       <ClassBadge colorInt={driver.carClassColor} shortName={driver.carClassShortName} />
@@ -135,13 +144,20 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
                       </span>
                     </td>
                   )}
+                  {columns.carName && (
+                    <td className="py-1 px-3 text-center">
+                      <span className={`text-[10px] truncate max-w-[120px] inline-block ${isPlayer ? 'text-brand-10' : 'text-brand-10/80'}`} title={driver.carName}>
+                        {driver.carName}
+                      </span>
+                    </td>
+                  )}
                   {columns.srating && (
                     <td className="py-1 px-3 text-center">
                       <SafetyRatingBadge licLevel={driver.licLevel} licString={driver.license} />
                     </td>
                   )}
                   {columns.irating && (
-                    <td className={`py-1 px-3 text-right font-semibold ${isPlayer ? 'text-brand-30' : 'text-brand-30'}`}>
+                    <td className={`py-1 px-3 text-center font-semibold ${isPlayer ? 'text-white' : 'text-brand-10/90'}`}>
                       {driver.irating > 0 ? (driver.irating / 1000).toFixed(1) + 'k' : '-'}
                     </td>
                   )}

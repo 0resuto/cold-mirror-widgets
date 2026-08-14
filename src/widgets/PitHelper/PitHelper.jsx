@@ -3,6 +3,7 @@ import { useTelemetryStore as useLiveStore } from '../../context/TelemetryContex
 
 import { Fuel, Wrench, CircleDashed } from 'lucide-react';
 import { LoadingState } from '../../components/LoadingState';
+import { ProgressBar } from '../../components/ProgressBar';
 
 export function PitHelper({ units = 'kph', throttleMs = 33 }) {
   const liveStore = useLiveStore();
@@ -83,7 +84,7 @@ export function PitHelper({ units = 'kph', throttleMs = 33 }) {
         <div className="flex justify-between items-end mb-2">
           <div className="flex items-baseline gap-1">
             <span className={`text-4xl font-black font-mono leading-none ${isSpeeding ? 'text-white animate-pulse' : 'text-brand-30 drop-shadow-md'}`}>
-              {displaySpeed.toFixed(1)}
+              {displaySpeed.toFixed(0)}
             </span>
             <span className="text-sm font-bold text-white/50 uppercase tracking-widest">
               {units}
@@ -98,19 +99,14 @@ export function PitHelper({ units = 'kph', throttleMs = 33 }) {
         </div>
 
         {/* Speed Bar */}
-        <div className="w-full h-8 bg-black/60 rounded-lg relative overflow-hidden border border-white/20 shadow-inner">
-          {/* Fill */}
-          <div 
-            className={`h-full transition-all duration-75 ${isSpeeding ? 'bg-red-500' : 'bg-brand-30'}`}
-            style={{ width: `${fillPct}%` }}
-          ></div>
-
-          {/* Limit Marker */}
-          <div 
-            className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_rgba(255,255,255,1)] z-10"
-            style={{ left: `${limitPct}%` }}
-          ></div>
-        </div>
+        <ProgressBar 
+          value={displaySpeed}
+          max={maxDisplaySpeed}
+          limit={displayLimit}
+          isWarning={isSpeeding}
+          colorClass="bg-brand-30"
+          warningColorClass="bg-red-500"
+        />
       </div>
 
       {/* Services Area */}

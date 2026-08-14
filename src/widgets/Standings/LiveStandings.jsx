@@ -38,6 +38,8 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
       const sessionDrivers = state.sessionDrivers || [];
       const playerName = latestData?.player_name || '';
 
+      const driverCarIdx = state.driverCarIdx ?? latestData?.playerCarIdx ?? null;
+
       if (Object.keys(grid).length === 0 || sessionDrivers.length === 0) return;
 
       const merged = [];
@@ -59,7 +61,7 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
             f2Time: gridData.F2Time || -1,
             trackSurface: gridData.TrackSurface,
             onPitRoad: gridData.OnPitRoad,
-            isPlayer: driver.UserName === playerName
+            isPlayer: driver.UserName === playerName || (driverCarIdx !== null && driver.CarIdx === driverCarIdx)
           });
         }
       }
@@ -96,7 +98,7 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
               {columns.carName && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-24 text-center">Car</th>}
               {columns.carClass && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-center">Class</th>}
               {columns.srating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-center">SR</th>}
-              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-right">IR</th>}
+              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-center">IR</th>}
               {columns.gap && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-right">Gap</th>}
               {columns.bestLap && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-16 text-right">Best Lap</th>}
               {columns.lastLap && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-16 text-right">Last Lap</th>}
@@ -164,7 +166,7 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
                     </td>
                   )}
                   {columns.irating && (
-                    <td className={`py-1 px-3 text-right font-semibold ${isPlayer ? 'text-brand-30' : 'text-brand-30'}`}>
+                    <td className={`py-1 px-3 text-center font-semibold ${isPlayer ? 'text-white' : 'text-brand-10/90'}`}>
                       {driver.IRating > 0 ? (driver.IRating / 1000).toFixed(1) + 'k' : '-'}
                     </td>
                   )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTelemetryStore as useLiveStore } from '../../context/TelemetryContext';
 
 import { LoadingState } from '../../components/LoadingState';
+import { ProgressBar } from '../../components/ProgressBar';
 import { Gamepad2 } from 'lucide-react';
 
 const MAX_HISTORY = 90; // 3 seconds at 30Hz
@@ -105,7 +106,7 @@ export function LiveInputs({ throttleMs = 33 }) {
 
           <div className="flex flex-col items-center mt-2 lg:mt-0">
             <span className="text-lg font-mono font-bold text-brand-10/90 leading-none inline-block w-10 text-center">
-              {Math.round(inputs.speed)}
+              {Math.round(inputs.speed * 3.6)}
             </span>
             <span className="text-[8px] text-brand-10/40 uppercase tracking-widest mt-1">km/h</span>
           </div>
@@ -115,32 +116,17 @@ export function LiveInputs({ throttleMs = 33 }) {
         <div className="flex gap-[1px] h-full py-1 shrink-0 px-1">
           {/* Clutch */}
           <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <div className="w-full bg-brand-60/30 rounded-t-sm flex-1 relative overflow-hidden flex items-end">
-              <div 
-                className="w-full bg-blue-500 transition-all shadow-[0_0_8px_rgba(59,130,246,0.6)]"
-                style={{ height: `${inputs.clutch * 100}%`, transitionDuration: '33ms' }}
-              />
-            </div>
+            <ProgressBar value={inputs.clutch} max={1} orientation="vertical" colorClass="bg-blue-500" showGlow={true} />
             <span className="text-[7px] font-bold text-blue-400/80 mt-1">C</span>
           </div>
           {/* Brake */}
           <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <div className="w-full bg-brand-60/30 rounded-t-sm flex-1 relative overflow-hidden flex items-end">
-              <div 
-                className="w-full bg-red-500 transition-all shadow-[0_0_8px_rgba(239,68,68,0.6)]"
-                style={{ height: `${inputs.brake * 100}%`, transitionDuration: '33ms' }}
-              />
-            </div>
+            <ProgressBar value={inputs.brake} max={1} orientation="vertical" colorClass="bg-red-500" showGlow={true} />
             <span className="text-[7px] font-bold text-red-400/80 mt-1">B</span>
           </div>
           {/* Throttle */}
           <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <div className="w-full bg-brand-60/30 rounded-t-sm flex-1 relative overflow-hidden flex items-end">
-              <div 
-                className="w-full bg-green-500 transition-all shadow-[0_0_8px_rgba(34,197,94,0.6)]"
-                style={{ height: `${inputs.throttle * 100}%`, transitionDuration: '33ms' }}
-              />
-            </div>
+            <ProgressBar value={inputs.throttle} max={1} orientation="vertical" colorClass="bg-green-500" showGlow={true} />
             <span className="text-[7px] font-bold text-green-400/80 mt-1">T</span>
           </div>
         </div>

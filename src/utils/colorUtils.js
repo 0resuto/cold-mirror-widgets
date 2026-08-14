@@ -17,13 +17,14 @@ export const getContrastYIQ = (hexcolor) => {
 
 // Returns styling object for iRacing license classes
 export const getLicenseTheme = (licLevel, licString) => {
-  const level = licLevel || 0;
   const str = licString || '';
-  if (str.startsWith('R')) return { bg: '#e03131', text: '#000000' }; // Soft Ruby
-  if (str.startsWith('D')) return { bg: '#e8590c', text: '#000000' }; // Rich Orange
-  if (str.startsWith('C')) return { bg: '#fcc419', text: '#000000' }; // Golden
-  if (str.startsWith('B')) return { bg: '#2f9e44', text: '#000000' }; // Emerald
-  if (str.startsWith('A')) return { bg: '#1c7ed6', text: '#000000' }; // Deep Blue
-  if (str.startsWith('P')) return { bg: '#adb5bd', text: '#000000' }; // Pro Silver (since text must be black)
-  return { bg: '#adb5bd', text: '#000000' };
+  let bg = '#adb5bd'; // Default (Pro / Silver)
+  
+  if (str.startsWith('R')) bg = '#e03131'; // Soft Ruby
+  else if (str.startsWith('D')) bg = '#e8590c'; // Rich Orange
+  else if (str.startsWith('C')) bg = '#fcc419'; // Golden
+  else if (str.startsWith('B')) return { bg: '#2f9e44', text: '#000000' }; // Emerald
+  else if (str.startsWith('A')) bg = '#1c7ed6'; // Deep Blue
+  
+  return { bg, text: getContrastYIQ(bg) === 'black' ? '#000000' : '#ffffff' };
 };
