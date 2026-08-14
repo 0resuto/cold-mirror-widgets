@@ -1,1 +1,57 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Brand Theme */
+  --color-brand-60: #383a44;
+  --color-brand-30: #e63946;
+  --color-brand-10: #eaeaea;
+  --color-brand-bg: #2b2d34;
+  
+  /* Semantic Chart Colors (Required for TelemetryChart) */
+  --color-accent-blue: #38BDF8;
+  --color-accent-green: #10B981;
+  --color-accent-red: #EF4444;
+  --color-accent-purple: #A855F7;
+  --color-accent-yellow: #F59E0B;
+}
+
+@layer utilities {
+  .glass {
+    background-color: color-mix(in srgb, var(--color-brand-bg) 40%, transparent);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+  }
+}
+
+.digital-number {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Custom Premium Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-60) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-brand-60);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-30);
+}

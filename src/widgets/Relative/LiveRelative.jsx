@@ -98,7 +98,7 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
               {columns.num && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-8 text-center">#</th>}
               {columns.driver && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-full">Driver</th>}
               {columns.srating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-center">SR</th>}
-              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-right">iRating</th>}
+              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-right">IR</th>}
               <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-right">Delta</th>
             </tr>
           </thead>
@@ -142,7 +142,7 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
                   )}
                   {columns.irating && (
                     <td className={`py-1 px-3 text-right font-semibold ${isPlayer ? 'text-brand-30' : 'text-brand-30'}`}>
-                      {driver.irating > 0 ? driver.irating : '-'}
+                      {driver.irating > 0 ? (driver.irating / 1000).toFixed(1) + 'k' : '-'}
                     </td>
                   )}
                   <td className={`py-1 px-3 text-right font-mono font-bold text-[11px] ${

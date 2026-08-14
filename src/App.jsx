@@ -39,17 +39,24 @@ const mockTelemetry = {
   PitSvTireSetupRight: 1,
   // Radar / Grid
   CarLeftRight: 0,
+  playerCarIdx: 1,
   grid: {
-    1: { LapDistPct: 0.5, Position: 1 },
-    2: { LapDistPct: 0.501, Position: 2 }, // right ahead
-    3: { LapDistPct: 0.499, Position: 3 }  // right behind
+    1: { LapDistPct: 0.5, Position: 1, Lap: 10, IsFastestLap: true }, // Player (Middle)
+    2: { LapDistPct: 0.75, Position: 2, Lap: 10, F2Time: 12.5 }, // Ahead
+    3: { LapDistPct: 0.25, Position: 3, Lap: 10, HasDamage: true, F2Time: -15.2 }, // Behind with damage
+    4: { LapDistPct: 0.1, Position: 20, Lap: 9 }, // Lapped car
+    5: { LapDistPct: 0.85, Position: 1, Lap: 11 }, // Ahead by a lap
+    6: { LapDistPct: 0.98, Position: 15, Lap: 10, OnPitRoad: true } // Pitting
   }
 };
 
 const mockSessionDrivers = [
-  { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 5000, SR: 4.5, CarClassShortName: "GT3", ClassPosition: 1, Position: 1 },
-  { CarIdx: 2, UserName: "Lando Norris", CarNumber: "4", IRating: 4800, SR: 4.2, CarClassShortName: "GT3", ClassPosition: 2, Position: 2 },
-  { CarIdx: 3, UserName: "Charles Leclerc", CarNumber: "16", IRating: 4900, SR: 4.8, CarClassShortName: "GT3", ClassPosition: 3, Position: 3 },
+  { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 5000, SR: 4.5, LicLevel: 4, LicString: 'A 4.5', CarClassShortName: "GT3", ClassPosition: 1, Position: 1 },
+  { CarIdx: 2, UserName: "Lando Norris", CarNumber: "4", IRating: 4800, SR: 4.2, LicLevel: 4, LicString: 'A 4.2', CarClassShortName: "GT3", ClassPosition: 2, Position: 2 },
+  { CarIdx: 3, UserName: "Charles Leclerc", CarNumber: "16", IRating: 4900, SR: 4.8, LicLevel: 4, LicString: 'A 4.8', CarClassShortName: "GT3", ClassPosition: 3, Position: 3 },
+  { CarIdx: 4, UserName: "Fernando Alonso", CarNumber: "14", IRating: 4500, SR: 3.5, LicLevel: 3, LicString: 'B 3.5', CarClassShortName: "GT3", ClassPosition: 20, Position: 20 },
+  { CarIdx: 5, UserName: "Lewis Hamilton", CarNumber: "44", IRating: 5100, SR: 4.9, LicLevel: 4, LicString: 'A 4.9', CarClassShortName: "LMP2", ClassPosition: 1, Position: 1 },
+  { CarIdx: 6, UserName: "Oscar Piastri", CarNumber: "81", IRating: 4600, SR: 4.0, LicLevel: 4, LicString: 'A 4.0', CarClassShortName: "GT3", ClassPosition: 15, Position: 15 },
 ];
 
 function App() {
@@ -59,7 +66,7 @@ function App() {
   const WidgetBox = ({ children, title, width = "w-[300px]", height = "h-[200px]" }) => (
     <div className="flex flex-col gap-2">
       <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{title}</span>
-      <div className={`${width} ${height} resize rounded-lg overflow-hidden border border-gray-700/50 bg-[#0a0a0a] shadow-2xl relative flex items-center justify-center min-w-[200px] min-h-[100px]`}>
+      <div className={`${width} ${height} resize rounded-lg overflow-hidden border border-brand-60/50 bg-brand-bg/80 backdrop-blur-md shadow-2xl relative flex items-center justify-center min-w-[200px] min-h-[100px]`}>
         {children}
       </div>
     </div>
@@ -71,7 +78,7 @@ function App() {
       sessionDrivers={useMockData ? mockSessionDrivers : []} 
       trackLength={useMockData ? 5000 : 0}
     >
-      <div className="min-h-screen bg-[#050505] p-10 font-sans text-white">
+      <div className="min-h-screen bg-[url('/bg.webp')] bg-cover bg-center bg-fixed p-10 font-sans text-white">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-black text-gray-400">Cold Mirror Widgets Playground</h1>
           
