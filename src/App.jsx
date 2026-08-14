@@ -59,7 +59,7 @@ function App() {
   const WidgetBox = ({ children, title, width = "w-[300px]", height = "h-[200px]" }) => (
     <div className="flex flex-col gap-2">
       <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{title}</span>
-      <div className={`${width} ${height} rounded-lg overflow-hidden border border-gray-700/50 bg-[#0a0a0a] shadow-2xl relative flex items-center justify-center`}>
+      <div className={`${width} ${height} resize rounded-lg overflow-hidden border border-gray-700/50 bg-[#0a0a0a] shadow-2xl relative flex items-center justify-center min-w-[200px] min-h-[100px]`}>
         {children}
       </div>
     </div>
@@ -96,11 +96,11 @@ function App() {
             <LiveFuel />
           </WidgetBox>
 
-          <WidgetBox title="Input Trace" width="w-[280px]" height="h-[180px]">
+          <WidgetBox title="Input Trace" width="w-[320px]" height="h-[180px]">
             <LiveInputs />
           </WidgetBox>
 
-          <WidgetBox title="Weather" width="w-[280px]" height="h-[180px]">
+          <WidgetBox title="Weather" width="w-[320px]" height="h-[180px]">
             <LiveWeather />
           </WidgetBox>
 
@@ -112,7 +112,7 @@ function App() {
             <LiveRadar />
           </WidgetBox>
 
-          <WidgetBox title="Digital Dash" width="w-[450px]" height="h-[250px]">
+          <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]">
             <DigitalDash />
           </WidgetBox>
 
@@ -120,7 +120,7 @@ function App() {
             <LiveRelative />
           </WidgetBox>
 
-          <WidgetBox title="Live Standings" width="w-[500px]" height="h-[350px]">
+          <WidgetBox title="Live Standings" width="w-[600px]" height="h-[350px]">
             <LiveStandings />
           </WidgetBox>
 
