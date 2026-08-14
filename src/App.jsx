@@ -1,0 +1,119 @@
+import React, { useState } from 'react';
+import { TelemetryProvider } from './context/TelemetryContext';
+
+import { LiveFuel } from './widgets/Fuel/LiveFuel';
+import { LiveInputs } from './widgets/Inputs/LiveInputs';
+import { LiveWeather } from './widgets/Weather/LiveWeather';
+import { DigitalDash } from './widgets/Dashboard/DigitalDash';
+import { PitHelper } from './widgets/PitHelper/PitHelper';
+import { LiveRadar } from './widgets/Radar/LiveRadar';
+import { LiveStandings } from './widgets/Standings/LiveStandings';
+import { LiveRelative } from './widgets/Relative/LiveRelative';
+import { LinearTrackMap } from './widgets/TrackMap/LinearTrackMap';
+
+// Comprehensive mock data so all widgets can render at least something
+const mockTelemetry = {
+  // Fuel
+  FuelLevel: 45.2,
+  FuelUsePerHour: 12.5,
+  // Inputs & Dash
+  Speed: 152.4,
+  RPM: 6500,
+  Gear: 4,
+  SteeringWheelAngle: 0.1,
+  Brake: 0.2,
+  Throttle: 0.8,
+  Clutch: 0,
+  ShiftGrindRPM: 8000,
+  ShiftIndicatorPct: 0.7,
+  // Weather
+  AirTemp: 22.5,
+  TrackTemp: 28.3,
+  WindDir: 1.5,
+  WindVel: 2.1,
+  Skies: 0,
+  // Pit
+  PitSvFlags: 0,
+  PitSvFuel: 0,
+  PitSvTireSetupLeft: 1,
+  PitSvTireSetupRight: 1,
+  // Radar / Grid
+  CarLeftRight: 0,
+  grid: {
+    1: { LapDistPct: 0.5, Position: 1 },
+    2: { LapDistPct: 0.501, Position: 2 }, // right ahead
+    3: { LapDistPct: 0.499, Position: 3 }  // right behind
+  }
+};
+
+const mockSessionDrivers = [
+  { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 5000, SR: 4.5, CarClassShortName: "GT3", ClassPosition: 1, Position: 1 },
+  { CarIdx: 2, UserName: "Lando Norris", CarNumber: "4", IRating: 4800, SR: 4.2, CarClassShortName: "GT3", ClassPosition: 2, Position: 2 },
+  { CarIdx: 3, UserName: "Charles Leclerc", CarNumber: "16", IRating: 4900, SR: 4.8, CarClassShortName: "GT3", ClassPosition: 3, Position: 3 },
+];
+
+function App() {
+  const [telemetry] = useState(mockTelemetry);
+
+  const WidgetBox = ({ children, title, width = "w-[300px]", height = "h-[200px]" }) => (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{title}</span>
+      <div className={`${width} ${height} rounded-lg overflow-hidden border border-gray-700/50 bg-[#0a0a0a] shadow-2xl relative flex items-center justify-center`}>
+        {children}
+      </div>
+    </div>
+  );
+
+  return (
+    <TelemetryProvider telemetry={telemetry} sessionDrivers={mockSessionDrivers} trackLength={5000}>
+      <div className="min-h-screen bg-[#050505] p-10 font-sans text-white">
+        <h1 className="text-2xl font-black mb-8 text-gray-400">Cold Mirror Widgets Playground</h1>
+        
+        <div className="flex gap-8 flex-wrap items-start">
+          
+          <WidgetBox title="Fuel Calculator" width="w-[280px]" height="h-[180px]">
+            <LiveFuel />
+          </WidgetBox>
+
+          <WidgetBox title="Input Trace" width="w-[280px]" height="h-[180px]">
+            <LiveInputs />
+          </WidgetBox>
+
+          <WidgetBox title="Weather" width="w-[280px]" height="h-[180px]">
+            <LiveWeather />
+          </WidgetBox>
+
+          <WidgetBox title="Pit Helper" width="w-[280px]" height="h-[180px]">
+            <PitHelper />
+          </WidgetBox>
+
+          <WidgetBox title="Radar" width="w-[280px]" height="h-[280px]">
+            <LiveRadar />
+          </WidgetBox>
+
+          <WidgetBox title="Digital Dash" width="w-[450px]" height="h-[250px]">
+            <DigitalDash />
+          </WidgetBox>
+
+          <WidgetBox title="Live Relative" width="w-[400px]" height="h-[300px]">
+            <LiveRelative />
+          </WidgetBox>
+
+          <WidgetBox title="Live Standings" width="w-[500px]" height="h-[350px]">
+            <LiveStandings />
+          </WidgetBox>
+
+        </div>
+        
+        <div className="mt-8">
+           <WidgetBox title="Linear Track Map" width="w-full max-w-[1200px]" height="h-[120px]">
+            <LinearTrackMap />
+          </WidgetBox>
+        </div>
+
+      </div>
+    </TelemetryProvider>
+  );
+}
+
+export default App;
