@@ -1,13 +1,29 @@
-# Cold Mirror Widgets
+<div align="center">
+  <h1>Cold Mirror Widgets</h1>
+  <p>A React widget library for iRacing telemetry and overlays.</p>
 
-Standalone, high-performance React widget library for iRacing telemetry and overlays.
+  <p>
+    <img src="https://img.shields.io/github/license/0resuto/cold-mirror-widgets" alt="License" />
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white" alt="Vite" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  </p>
+</div>
+
+---
+
+## Overview
+
+Cold Mirror Widgets provides a set of UI components designed for iRacing telemetry data. 
 
 ## Features
 
-- **Decoupled Architecture**: Fully decoupled from Electron or desktop window state.
-- **`TelemetryProvider` Context**: Wrap your app once and feed telemetry from any data source (Shared Memory, WebSockets, Mock data).
-- **High Performance**: Optimized update loop with `useSyncExternalStore` and configurable throttling.
-- **TailwindCSS**: Styled with modern Tailwind v4.
+- **Portability**: Independent from Electron and specific desktop window environments.
+- **`TelemetryProvider` Context**: Wraps your application to supply telemetry from any data source (Shared Memory, WebSockets, or Mock data).
+- **Update Loop**: Uses `useSyncExternalStore` for telemetry state updates with configurable throttling to manage rendering frequency.
+- **Styling**: Uses TailwindCSS v4.
 
 ## Installation
 
@@ -23,7 +39,7 @@ import { TelemetryProvider, LiveFuel, DigitalDash, LiveRelative, LiveStandings }
 import 'cold-mirror-widgets/style.css';
 
 function App() {
-  const telemetryData = { ... }; // From WebSocket or SDK
+  const telemetryData = { /* Telemetry from WebSocket or SDK */ }; 
 
   return (
     <TelemetryProvider telemetry={telemetryData} sessionDrivers={[]} trackLength={4000}>
@@ -52,9 +68,8 @@ function App() {
 
 ## Local Development Playground
 
-Run the interactive dev playground to test widgets locally:
+Run the development server to test widgets locally with mock data:
 
 ```bash
 npm run dev
 ```
-
