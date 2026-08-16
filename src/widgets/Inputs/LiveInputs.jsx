@@ -94,52 +94,52 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
 
   return (
     <div 
-      className={`w-full h-full flex flex-col p-4 gap-2 font-sans overflow-hidden rounded-xl transition-all duration-300 ${
+      className={`w-full h-full flex flex-col pt-1 pb-[3px] pl-0.5 pr-0.5 gap-px font-sans overflow-hidden rounded-xl transition-all duration-300 ${
         isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
       }`}
       style={{
         backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
       }}
     >
-      <div className="flex-1 flex p-2 gap-2">
+      <div className="flex-1 flex p-0 gap-0.5">
         
         {/* Left column: Gear & Speed */}
-        <div className="flex flex-col max-h-[160px]:flex-row max-h-[160px]:gap-6 max-h-[160px]:justify-center items-center justify-around min-w-[64px] bg-brand-60/20 rounded-lg p-2 border border-brand-60/30 shrink-0">
+        <div className="flex flex-col max-h-[160px]:flex-row max-h-[160px]:gap-6 max-h-[160px]:justify-center items-center justify-around min-w-[64px] rounded-lg p-0 shrink-0">
           <div className="flex flex-col items-center">
-            <span className={`text-5xl font-mono font-black leading-none drop-shadow-md ${inputs.gear <= 0 ? 'text-red-500' : 'text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]'}`}>
+            <span className={`text-6xl font-mono font-black leading-none drop-shadow-md ${inputs.gear <= 0 ? 'text-red-500' : 'text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]'}`}>
               {displayGear}
             </span>
           </div>
 
-          <div className="flex flex-col items-center mt-2 lg:mt-0">
+          <div className="flex flex-col items-center mt-0.5 lg:mt-0">
             <span className="text-lg font-mono font-bold text-brand-10/90 leading-none inline-block w-10 text-center">
               {Math.round(inputs.speed * 3.6)}
             </span>
-            <span className="text-[8px] text-brand-10/40 uppercase tracking-widest mt-1">km/h</span>
+            <span className="text-[8px] text-brand-10/40 uppercase tracking-widest mt-px">km/h</span>
           </div>
         </div>
 
         {/* Center column: Live Pedals */}
-        <div className="flex gap-[1px] h-full py-1 shrink-0 px-1">
+        <div className="flex gap-0.5 h-full py-1 shrink-0 px-0">
           {/* Clutch */}
-          <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <ProgressBar value={inputs.clutch} max={1} orientation="vertical" colorClass="bg-blue-500" showGlow={true} />
+          <div className="flex flex-col items-center h-full w-1.5 justify-end">
+            <ProgressBar value={inputs.clutch} max={1} orientation="vertical" colorClass="bg-blue-500" showGlow={false} />
             <span className="text-[7px] font-bold text-blue-400/80 mt-1">C</span>
           </div>
           {/* Brake */}
-          <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <ProgressBar value={inputs.brake} max={1} orientation="vertical" colorClass="bg-red-500" showGlow={true} />
+          <div className="flex flex-col items-center h-full w-1.5 justify-end">
+            <ProgressBar value={inputs.brake} max={1} orientation="vertical" colorClass="bg-red-500" showGlow={false} />
             <span className="text-[7px] font-bold text-red-400/80 mt-1">B</span>
           </div>
           {/* Throttle */}
-          <div className="flex flex-col items-center h-full w-2.5 justify-end">
-            <ProgressBar value={inputs.throttle} max={1} orientation="vertical" colorClass="bg-green-500" showGlow={true} />
+          <div className="flex flex-col items-center h-full w-1.5 justify-end">
+            <ProgressBar value={inputs.throttle} max={1} orientation="vertical" colorClass="bg-green-500" showGlow={false} />
             <span className="text-[7px] font-bold text-green-400/80 mt-1">T</span>
           </div>
         </div>
 
         {/* Right column: Trace Graph */}
-        <div className="flex-1 bg-black/40 rounded-lg relative overflow-hidden border border-brand-60/30 ml-1">
+        <div className="flex-1 bg-black/40 rounded-lg relative overflow-hidden border border-brand-60/30">
           {/* Background grid */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none py-3 opacity-20">
             <div className="w-full border-b border-brand-60 border-dashed"></div>
@@ -191,7 +191,7 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
         </div>
 
         {/* Far Right: Steering Wheel */}
-        <div className="flex flex-col items-center justify-center w-16 bg-brand-60/20 rounded-lg p-2 border border-brand-60/30 shrink-0">
+        <div className="flex flex-col items-center justify-center w-16 rounded-lg p-0 shrink-0">
           <div className="w-12 h-12 rounded-full flex items-center justify-center">
             <svg width="48" height="48" viewBox="0 0 40 40">
               <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="6" />
