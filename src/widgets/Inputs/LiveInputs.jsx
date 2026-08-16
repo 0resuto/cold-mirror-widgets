@@ -191,17 +191,18 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
         </div>
 
         {/* Far Right: Steering Wheel */}
-        <div className="flex flex-col items-center justify-center w-14 bg-brand-60/20 rounded-lg p-2 border border-brand-60/30 shrink-0">
-          <div className="w-10 h-10 border-2 border-brand-60/50 rounded-full flex items-center justify-center">
-            {/* Steering wheel visualizer */}
-            <div 
-              className="w-8 h-[2px] bg-brand-10/80 rounded-full shadow-lg relative"
-              style={{ transform: `rotate(${-steerDeg}deg)`, transition: 'transform 50ms linear' }}
-            >
-               <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-[2px] h-3 bg-brand-primary rounded-sm shadow-[0_0_5px_var(--brand-primary)]"></div>
-            </div>
+        <div className="flex flex-col items-center justify-center w-16 bg-brand-60/20 rounded-lg p-2 border border-brand-60/30 shrink-0">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center">
+            <svg width="48" height="48" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="6" />
+              <g
+                style={{ transform: `rotate(${-steerDeg}deg)`, transformOrigin: '20px 20px', transition: 'transform 50ms linear' }}
+              >
+                <line x1="20" y1="2" x2="20" y2="6" stroke="rgb(250,204,21)" strokeWidth="4" strokeLinecap="round" />
+              </g>
+            </svg>
           </div>
-          <span className="text-[8px] text-brand-10/50 font-mono mt-2 text-center leading-none">{Math.abs(Math.round(steerDeg))}°</span>
+          <span className="text-[10px] text-brand-10/50 font-mono mt-2 text-center leading-none">{Math.abs(Math.round(steerDeg))}°</span>
         </div>
 
       </div>
