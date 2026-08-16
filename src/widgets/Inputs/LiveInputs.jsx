@@ -50,7 +50,7 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
 
       // Normalize steering for the trace (assume +/- 180 degrees is the main visible range)
       const steerDeg = newInputs.steering * (180 / Math.PI);
-      let normalizedSteering = 0.5 + (steerDeg / 360);
+      let normalizedSteering = 0.5 - (steerDeg / 360);
       normalizedSteering = Math.max(0, Math.min(1, normalizedSteering)); // Clamp 0 to 1
 
       historyRef.current.push({
@@ -196,7 +196,7 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
             {/* Steering wheel visualizer */}
             <div 
               className="w-8 h-[2px] bg-brand-10/80 rounded-full shadow-lg relative"
-              style={{ transform: `rotate(${steerDeg}deg)`, transition: 'transform 50ms linear' }}
+              style={{ transform: `rotate(${-steerDeg}deg)`, transition: 'transform 50ms linear' }}
             >
                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-[2px] h-3 bg-brand-primary rounded-sm shadow-[0_0_5px_var(--brand-primary)]"></div>
             </div>
