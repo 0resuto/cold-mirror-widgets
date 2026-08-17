@@ -39,7 +39,7 @@ export const TableRow = ({ children, isPlayer, isPaceCar, className = '', ...pro
     className={`border-b transition-colors ${
       isPaceCar ? 'opacity-50 border-brand-60/20' : 
       isPlayer ? 'bg-gradient-to-r from-white/20 to-white/5 border-transparent shadow-[0_3px_8px_rgba(0,0,0,0.4),0_1px_0_#2b2d34,0_-1px_0_#2b2d34,inset_0_1px_0_rgba(255,255,255,0.15)] relative z-20' : 
-      'border-brand-60/20 hover:bg-brand-60/30'
+      'border-brand-60/20'
     } ${className}`}
     {...props}
   >
