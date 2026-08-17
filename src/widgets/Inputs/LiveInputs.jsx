@@ -5,9 +5,7 @@ import { LoadingState } from '../../components/LoadingState';
 import { ProgressBar } from '../../components/ProgressBar';
 import { Gamepad2 } from 'lucide-react';
 
-const MAX_HISTORY = 90; // 3 seconds at 30Hz
-
-export function LiveInputs({ throttleMs = 33, isLocked = false }) {
+export function LiveInputs({ throttleMs = 33, isLocked = false, timeRange = 3 }) {
   const liveStore = useLiveStore();
   const [inputs, setInputs] = useState({
     throttle: 0,
@@ -21,6 +19,9 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
 
   const historyRef = useRef([]);
   const [history, setHistory] = useState([]);
+
+  // Calculate the maximum number of points based on timeRange and update frequency
+  const maxHistory = Math.max(10, Math.ceil((timeRange * 1000) / throttleMs));
 
   useEffect(() => {
     let lastUpdateTime = 0;
@@ -60,15 +61,16 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
         s: normalizedSteering
       });
 
-      if (historyRef.current.length > MAX_HISTORY) {
-        historyRef.current.shift();
+      if (historyRef.current.length > maxHistory) {
+        // If maxHistory shrinks, we might need to remove more than one
+        historyRef.current = historyRef.current.slice(-maxHistory);
       }
       
       setHistory([...historyRef.current]);
     });
 
     return () => unsubscribe();
-  }, [liveStore, throttleMs]);
+  }, [liveStore, throttleMs, maxHistory]);
 
   // Format gear
   const displayGear = inputs.gear === 0 ? 'N' : inputs.gear === -1 ? 'R' : inputs.gear.toString();
@@ -79,7 +81,7 @@ export function LiveInputs({ throttleMs = 33, isLocked = false }) {
   // Generate SVG points for polyline
   const generatePath = (key, height) => {
     if (history.length === 0) return '';
-    const stepX = 100 / (MAX_HISTORY - 1);
+    const stepX = 100 / (maxHistory - 1);
     
     return history.map((point, index) => {
       const x = index * stepX;
