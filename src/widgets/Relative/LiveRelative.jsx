@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTelemetryStore as useLiveStore } from '../../context/TelemetryContext';
 
 import { LoadingState } from '../../components/LoadingState';
-import { motion } from 'framer-motion';
-import { ClassBadge, SafetyRatingBadge } from '../../components/DriverBadges';
+import { TableContainer, TableHead, TableBody, TableRow, TableHeadCell, TableCell, PosCell, DriverCell, GapCell, IratingCell, ClassCell, SafetyRatingCell } from '../../components/Table';
 
 const defaultRelativeColumns = { pos: true, classBadge: true, num: true, driver: true, carName: true, irating: true, srating: true };
 
@@ -89,95 +88,46 @@ export function LiveRelative({ columns = defaultRelativeColumns, isLocked = fals
   }
 
   return (
-    <div 
-      className={`flex flex-col w-full h-fit max-h-full rounded-xl overflow-hidden transition-all duration-300 ${
-        isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
-      }`}
-      style={{
-        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
-      }}
-    >
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <table className="w-full text-left border-collapse">
-          <thead className={`sticky top-0 z-10 shadow-sm transition-colors ${isLocked ? 'bg-brand-60/95 backdrop-blur-md' : 'bg-brand-60/80'}`}>
-            <tr>
-              {columns.pos && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-8 text-center">POS</th>}
-              {columns.classBadge && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-center">Class</th>}
-              {columns.num && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-8 text-center">#</th>}
-              {columns.driver && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-full">Driver</th>}
-              {columns.carName && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-24 text-center">Car</th>}
-              {columns.srating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-center">SR</th>}
-              {columns.irating && <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-12 text-center">IR</th>}
-              <th className="py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider w-14 text-right">Delta</th>
-            </tr>
-          </thead>
-          <tbody className="text-xs font-mono">
-            {relativeDrivers.map((driver) => {
-              const isPlayer = driver.isPlayer;
+    <TableContainer isLocked={isLocked}>
+      <TableHead isLocked={isLocked}>
+        {columns.pos && <TableHeadCell width="w-8" align="text-center">POS</TableHeadCell>}
+        {columns.classBadge && <TableHeadCell width="w-12" align="text-center">Class</TableHeadCell>}
+        {columns.num && <TableHeadCell width="w-8" align="text-center">#</TableHeadCell>}
+        {columns.driver && <TableHeadCell width="w-full">Driver</TableHeadCell>}
+        {columns.carName && <TableHeadCell width="w-24" align="text-center">Car</TableHeadCell>}
+        {columns.srating && <TableHeadCell width="w-14" align="text-center">SR</TableHeadCell>}
+        {columns.irating && <TableHeadCell width="w-12" align="text-center">IR</TableHeadCell>}
+        <TableHeadCell width="w-14" align="text-right">Delta</TableHeadCell>
+      </TableHead>
+      <TableBody>
+        {relativeDrivers.map((driver) => {
+          const isPlayer = driver.isPlayer;
 
-              return (
-                <motion.tr 
-                  layout
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  key={driver.carIdx} 
-                  className={`border-b transition-colors ${
-                    isPlayer ? 'bg-gradient-to-r from-white/20 to-white/5 border-white/30 shadow-[0_3px_8px_rgba(0,0,0,0.4),0_1px_0_#2b2d34,0_-1px_0_#2b2d34,inset_0_1px_0_rgba(255,255,255,0.15)] relative z-20' : 
-                    'border-brand-60/20 hover:bg-brand-60/30'
-                  }`}
-                >
-                  {columns.pos && (
-                    <td className={`py-1 px-3 text-center font-bold border-l-4 ${isPlayer ? 'text-white border-white/40 bg-white/5' : 'text-brand-10/90 border-transparent'}`}>
-                      {driver.pos > 0 ? driver.pos : '-'}
-                    </td>
-                  )}
-                  {columns.classBadge && (
-                    <td className="py-1 px-3 text-center">
-                      <ClassBadge colorInt={driver.carClassColor} shortName={driver.carClassShortName} />
-                    </td>
-                  )}
-                  {columns.num && (
-                    <td className={`py-1 px-3 text-center font-bold italic ${isPlayer ? 'text-white' : 'text-brand-30'}`}>
-                      {driver.carNumber}
-                    </td>
-                  )}
-                  {columns.driver && (
-                    <td className="py-1 px-3">
-                      <span className={`font-sans truncate inline-block max-w-[140px] align-middle ${isPlayer ? 'font-black text-white text-[13px] drop-shadow-md' : 'font-semibold text-brand-10'}`}>
-                        {driver.name || 'Unknown'}
-                      </span>
-                    </td>
-                  )}
-                  {columns.carName && (
-                    <td className="py-1 px-3 text-center">
-                      <span className={`text-[10px] truncate max-w-[120px] inline-block ${isPlayer ? 'text-brand-10' : 'text-brand-10/80'}`} title={driver.carName}>
-                        {driver.carName}
-                      </span>
-                    </td>
-                  )}
-                  {columns.srating && (
-                    <td className="py-1 px-3 text-center">
-                      <SafetyRatingBadge licLevel={driver.licLevel} licString={driver.license} />
-                    </td>
-                  )}
-                  {columns.irating && (
-                    <td className={`py-1 px-3 text-center font-semibold ${isPlayer ? 'text-white' : 'text-brand-10/90'}`}>
-                      {driver.irating > 0 ? (driver.irating / 1000).toFixed(1) + 'k' : '-'}
-                    </td>
-                  )}
-                  <td className={`py-1 px-3 text-right font-mono font-bold text-[11px] ${
-                    isPlayer ? 'text-white' : driver.gap > 0 ? 'text-accent-red' : 'text-accent-green'
-                  }`}>
-                    {isPlayer ? '0.0' : `${driver.gap > 0 ? '+' : ''}${Math.abs(driver.gap).toFixed(1)}`}
-                  </td>
-                </motion.tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          return (
+            <TableRow key={driver.carIdx} isPlayer={isPlayer}>
+              {columns.pos && <PosCell pos={driver.pos} isPlayer={isPlayer} />}
+              {columns.classBadge && <ClassCell colorInt={driver.carClassColor} shortName={driver.carClassShortName} />}
+              {columns.num && (
+                <TableCell align="text-center" className={`font-bold italic ${isPlayer ? 'text-white' : 'text-brand-30'}`}>
+                  {driver.carNumber}
+                </TableCell>
+              )}
+              {columns.driver && <DriverCell name={driver.name} isPlayer={isPlayer} />}
+              {columns.carName && (
+                <TableCell align="text-center">
+                  <span className={`text-[10px] truncate max-w-[120px] inline-block ${isPlayer ? 'text-brand-10' : 'text-brand-10/80'}`} title={driver.carName}>
+                    {driver.carName}
+                  </span>
+                </TableCell>
+              )}
+              {columns.srating && <SafetyRatingCell licLevel={driver.licLevel} licString={driver.license} />}
+              {columns.irating && <IratingCell irating={driver.irating} isPlayer={isPlayer} />}
+              <GapCell gap={driver.gap} isPlayer={isPlayer} />
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </TableContainer>
   );
 }
 

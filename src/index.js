@@ -10,3 +10,4 @@ export { LiveStandings } from './widgets/Standings/LiveStandings.jsx';
 export { LinearTrackMap } from './widgets/TrackMap/LinearTrackMap.jsx';
 export { LiveWeather } from './widgets/Weather/LiveWeather.jsx';
 
+export * from './components/Table';
