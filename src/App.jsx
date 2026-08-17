@@ -96,6 +96,7 @@ function App() {
   const [useMockData, setUseMockData] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [widgetOpacity, setWidgetOpacity] = useState(100);
+  const [inactiveOpacity, setInactiveOpacity] = useState(30);
   const [bgOpacity, setBgOpacity] = useState(60);
 
   const telemetry = useMockData ? mockTelemetry : null;
@@ -143,6 +144,15 @@ function App() {
               <input type="range" min="10" max="100" value={widgetOpacity} onChange={e => setWidgetOpacity(e.target.value)} className="w-full h-1 bg-brand-60/40 rounded-lg appearance-none cursor-pointer accent-brand-30" />
             </div>
 
+            {/* Inactive Opacity */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-xs font-bold text-brand-10/80 uppercase tracking-wider">Inactive Opacity</span>
+                <span className="text-xs font-mono text-brand-30">{inactiveOpacity}%</span>
+              </div>
+              <input type="range" min="0" max="100" value={inactiveOpacity} onChange={e => setInactiveOpacity(e.target.value)} className="w-full h-1 bg-brand-60/40 rounded-lg appearance-none cursor-pointer accent-brand-30" />
+            </div>
+
             {/* BG Opacity */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
@@ -154,7 +164,10 @@ function App() {
           </div>
         </div>
         
-        <div className="flex gap-8 flex-wrap items-start">
+        <div 
+          className="flex gap-8 flex-wrap items-start"
+          style={{ '--inactive-opacity': inactiveOpacity / 100 }}
+        >
           
           <WidgetBox title="Fuel Calculator" width="w-[280px]" height="h-[150px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
             <LiveFuel isLocked={isLocked} />
@@ -182,7 +195,10 @@ function App() {
 
         </div>
         
-        <div className="mt-8 flex flex-col gap-8">
+        <div 
+          className="mt-8 flex flex-col gap-8"
+          style={{ '--inactive-opacity': inactiveOpacity / 100 }}
+        >
            <WidgetBox title="Linear Track Map" width="w-full max-w-[1200px]" height="h-[70px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
             <LinearTrackMap isLocked={isLocked} />
           </WidgetBox>
@@ -192,7 +208,10 @@ function App() {
           </WidgetBox>
         </div>
 
-        <div className="mt-8 flex gap-8 flex-wrap items-start">
+        <div 
+          className="mt-8 flex gap-8 flex-wrap items-start"
+          style={{ '--inactive-opacity': inactiveOpacity / 100 }}
+        >
           <WidgetBox title="Digital Dash" width="w-[600px]" height="h-[250px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
             <DigitalDash isLocked={isLocked} />
           </WidgetBox>

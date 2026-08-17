@@ -90,17 +90,20 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
     return 50 - (normalized * 50); // 0% to 100%
   };
 
+  const isActive = nearbyCars.length > 0;
+
   if (!hasData) {
     return <LoadingState message="Waiting for Radar Data" />;
   }
 
   return (
     <div 
-      className={`w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-2 rounded-xl transition-all duration-300 ${
+      className={`w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-2 rounded-xl transition-all duration-500 ${
         isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
       }`}
       style={{
-        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+        backgroundColor: 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))',
+        opacity: isActive ? 1 : 'var(--inactive-opacity, 1)'
       }}
     >
       

@@ -73,17 +73,20 @@ export function PitHelper({ units = 'kph', throttleMs = 33, isLocked = false }) 
   const fuel = (data.pitSvFlags & 16) > 0;
   const fastRepair = (data.pitSvFlags & 64) > 0;
 
+  const isActive = data.onPitRoad;
+
   if (!hasData) {
     return <LoadingState message="Waiting for Pit Data" />;
   }
 
   return (
     <div 
-      className={`w-full h-full flex flex-col font-sans overflow-hidden rounded-xl transition-all duration-300 ${
+      className={`w-full h-full flex flex-col font-sans overflow-hidden rounded-xl transition-all duration-500 ${
         isLocked ? 'border-transparent shadow-none' : 'border border-brand-60/60 shadow-xl backdrop-blur-sm'
       } ${isSpeeding ? 'bg-red-600/90 shadow-[0_0_50px_rgba(220,38,38,0.8)]' : ''}`}
       style={{
-        backgroundColor: isSpeeding ? undefined : 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))'
+        backgroundColor: isSpeeding ? undefined : 'var(--widget-bg-color, rgba(30, 30, 36, 0.6))',
+        opacity: isActive ? 1 : 'var(--inactive-opacity, 1)'
       }}
     >
       {/* Speedometer Area */}
