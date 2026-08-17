@@ -50,6 +50,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
           
           const car = grid[idx];
           if (!car.LapDistPct && car.LapDistPct !== 0) return;
+          if (car.OnPitRoad) return;
 
           let delta = car.LapDistPct - player.LapDistPct;
           
@@ -151,7 +152,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
             key={car.id}
             className={`absolute w-9 rounded-md border flex items-center justify-center transition-all duration-75 z-10 ${
               isDanger 
-                ? 'bg-red-500/80 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.8)]' 
+                ? 'bg-yellow-500/80 border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.8)]' 
                 : 'bg-white/20 border-white/30 backdrop-blur-sm'
             }`}
             style={{ 
@@ -162,7 +163,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
               opacity: 1 - Math.abs(car.distance) / (RADAR_RANGE_METERS * 1.2) // Fade out at edges
             }}
           >
-            <span className="text-[10px] text-white font-bold opacity-80 pb-6">{car.position}</span>
+            <span className="text-[10px] text-black font-bold opacity-80 pb-6">{car.position}</span>
           </div>
         );
       })}
@@ -170,21 +171,21 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
       {/* Left Danger Zone Glow */}
       <div 
         className={`absolute left-0 top-0 bottom-0 w-12 transition-all duration-300 pointer-events-none ${
-          isLeft ? 'bg-gradient-to-r from-red-500/40 to-transparent opacity-100' : 'opacity-0'
+          isLeft ? 'bg-gradient-to-r from-yellow-500/40 to-transparent opacity-100' : 'opacity-0'
         }`}
       ></div>
 
       {/* Right Danger Zone Glow */}
       <div 
         className={`absolute right-0 top-0 bottom-0 w-12 transition-all duration-300 pointer-events-none ${
-          isRight ? 'bg-gradient-to-l from-red-500/40 to-transparent opacity-100' : 'opacity-0'
+          isRight ? 'bg-gradient-to-l from-yellow-500/40 to-transparent opacity-100' : 'opacity-0'
         }`}
       ></div>
       
       {/* Header/Status */}
       <div className="absolute top-3 left-0 w-full flex justify-center z-30">
         <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg transition-colors ${
-          (isLeft || isRight) ? 'bg-red-500 text-white' : 'bg-brand-bg/80 text-brand-10/50 border border-brand-60/50'
+          (isLeft || isRight) ? 'bg-yellow-500 text-black' : 'bg-brand-bg/80 text-brand-10/50 border border-brand-60/50'
         }`}>
           {(isLeft || isRight) ? 'BLIND SPOT' : 'CLEAR'}
         </span>
