@@ -29,6 +29,8 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
       const grid = latestData?.grid || {};
       const sessionDrivers = state.sessionDrivers || [];
       const playerName = latestData?.player_name || '';
+      
+      const sessionBestLapTime = latestData?.sessionBestLapTime || latestData?.SessionBestLapTime || -1;
 
       const driverCarIdx = state.driverCarIdx ?? latestData?.playerCarIdx ?? null;
 
@@ -53,6 +55,7 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
             f2Time: gridData.F2Time || -1,
             trackSurface: gridData.TrackSurface,
             onPitRoad: gridData.OnPitRoad,
+            isSessionBest: gridData.isSessionBest || (sessionBestLapTime > 0 && gridData.BestLapTime === sessionBestLapTime),
             isPlayer: driver.UserName === playerName || (driverCarIdx !== null && driver.CarIdx === driverCarIdx)
           });
         }
@@ -122,7 +125,7 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
               {columns.srating && <SafetyRatingCell licLevel={driver.LicLevel} licString={driver.LicString} />}
               {columns.irating && <IratingCell irating={driver.IRating} isPlayer={isPlayer} />}
               {columns.gap && <GapCell gap={driver.f2Time} isPlayer={isPlayer} isStandings={true} />}
-              {columns.bestLap && <LapTimeCell seconds={driver.bestLapTime} isPlayer={isPlayer} />}
+              {columns.bestLap && <LapTimeCell seconds={driver.bestLapTime} isPlayer={isPlayer} isSessionBest={driver.isSessionBest} />}
               {columns.lastLap && <LapTimeCell seconds={driver.lastLapTime} isPlayer={isPlayer} opacity="70" />}
               {columns.laps && (
                 <TableCell align="text-right" className={`font-mono ${isPlayer ? 'text-white' : 'text-brand-10/70'}`}>

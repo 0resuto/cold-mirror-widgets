@@ -26,6 +26,8 @@ const mockTelemetry = {
   Clutch: 0,
   ShiftGrindRPM: 8000,
   ShiftIndicatorPct: 0.7,
+  // Timing
+  SessionBestLapTime: 83.9,
   // Weather
   AirTemp: 22.5,
   TrackTemp: 28.3,
