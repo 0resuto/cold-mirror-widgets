@@ -54,9 +54,9 @@ const mockTelemetry = {
 
 const mockSessionDrivers = [
   { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 6200, SR: 4.5, LicLevel: 4, LicString: 'A 4.5', CarClassShortName: "GT3", CarScreenNameShort: "Porsche 911", ClassPosition: 1, Position: 2 },
-  { CarIdx: 2, UserName: "Lando Norris", CarNumber: "4", IRating: 3800, SR: 3.2, LicLevel: 3, LicString: 'B 3.2', CarClassShortName: "GT3", CarScreenNameShort: "McLaren MP4", ClassPosition: 2, Position: 3 },
-  { CarIdx: 3, UserName: "Charles Leclerc", CarNumber: "16", IRating: 1400, SR: 2.8, LicLevel: 1, LicString: 'D 2.8', CarClassShortName: "GT3", CarScreenNameShort: "Ferrari 296", ClassPosition: 4, Position: 5 },
-  { CarIdx: 4, UserName: "Fernando Alonso", CarNumber: "14", IRating: 900, SR: 1.5, LicLevel: 0, LicString: 'R 1.5', CarClassShortName: "GT3", CarScreenNameShort: "Aston Martin", ClassPosition: 5, Position: 6 },
+  { CarIdx: 2, UserName: "Yuki Tsunoda 角田 裕毅", CarNumber: "22", IRating: 3800, SR: 3.2, LicLevel: 3, LicString: 'B 3.2', CarClassShortName: "GT3", CarScreenNameShort: "McLaren MP4", ClassPosition: 2, Position: 3 },
+  { CarIdx: 3, UserName: "Zhou Guanyu 周冠宇", CarNumber: "24", IRating: 1400, SR: 2.8, LicLevel: 1, LicString: 'D 2.8', CarClassShortName: "GT3", CarScreenNameShort: "Ferrari 296", ClassPosition: 4, Position: 5 },
+  { CarIdx: 4, UserName: "Алексей Смирнов", CarNumber: "14", IRating: 900, SR: 1.5, LicLevel: 0, LicString: 'R 1.5', CarClassShortName: "GT3", CarScreenNameShort: "Aston Martin", ClassPosition: 5, Position: 6 },
   { CarIdx: 5, UserName: "Lewis Hamilton", CarNumber: "44", IRating: 7100, SR: 4.9, LicLevel: 4, LicString: 'A 4.9', CarClassShortName: "LMP2", CarScreenNameShort: "Dallara P217", ClassPosition: 1, Position: 1 },
   { CarIdx: 6, UserName: "Oscar Piastri", CarNumber: "81", IRating: 2600, SR: 2.0, LicLevel: 2, LicString: 'C 2.0', CarClassShortName: "GT3", CarScreenNameShort: "McLaren MP4", ClassPosition: 3, Position: 4 },
 ];
