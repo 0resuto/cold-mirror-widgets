@@ -99,6 +99,8 @@ const WidgetBox = ({ children, title, isLocked, widgetOpacity, bgOpacity, width 
 function App() {
   const [useMockData, setUseMockData] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const [groupByClass, setGroupByClass] = useState(false);
+  const [showClassName, setShowClassName] = useState(false);
   const [widgetOpacity, setWidgetOpacity] = useState(100);
   const [inactiveOpacity, setInactiveOpacity] = useState(30);
   const [bgOpacity, setBgOpacity] = useState(60);
@@ -134,6 +136,26 @@ function App() {
                 <input type="checkbox" className="sr-only" checked={isLocked} onChange={(e) => setIsLocked(e.target.checked)} />
                 <div className={`block w-10 h-5 rounded-full transition-colors border ${isLocked ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
                 <div className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${isLocked ? 'translate-x-5 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
+              </div>
+            </label>
+
+            {/* Group by Class */}
+            <label className="flex items-center justify-between cursor-pointer gap-4 hover:opacity-80 transition-opacity">
+              <span className="text-sm font-bold text-brand-10 uppercase tracking-wider">Group Class</span>
+              <div className="relative">
+                <input type="checkbox" className="sr-only" checked={groupByClass} onChange={(e) => setGroupByClass(e.target.checked)} />
+                <div className={`block w-10 h-5 rounded-full transition-colors border ${groupByClass ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
+                <div className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${groupByClass ? 'translate-x-5 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
+              </div>
+            </label>
+
+            {/* Show Class Name */}
+            <label className="flex items-center justify-between cursor-pointer gap-4 hover:opacity-80 transition-opacity">
+              <span className="text-sm font-bold text-brand-10 uppercase tracking-wider">Class Name</span>
+              <div className="relative">
+                <input type="checkbox" className="sr-only" checked={showClassName} onChange={(e) => setShowClassName(e.target.checked)} />
+                <div className={`block w-10 h-5 rounded-full transition-colors border ${showClassName ? 'bg-brand-30 border-brand-30' : 'bg-brand-bg border-brand-60'}`}></div>
+                <div className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${showClassName ? 'translate-x-5 bg-brand-10' : 'bg-brand-60 translate-x-0'}`}></div>
               </div>
             </label>
 
@@ -186,11 +208,16 @@ function App() {
           </WidgetBox>
 
           <WidgetBox title="Live Standings" width="w-[900px]" height="h-[300px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
-            <LiveStandings isLocked={isLocked} columns={{ pos: true, num: true, driver: true, carName: true, carClass: true, classPos: true, srating: true, irating: true, gap: true, bestLap: true, lastLap: true, trackPct: true, laps: true }} />
+            <LiveStandings 
+              isLocked={isLocked} 
+              groupByClass={groupByClass}
+              showClassName={showClassName}
+              columns={{ pos: true, num: true, driver: true, carClass: true, carName: true, classPos: true, srating: true, irating: true, gap: true, bestLap: true, lastLap: true, trackPct: true, laps: true }} 
+            />
           </WidgetBox>
 
           <WidgetBox title="Live Relative" width="w-[580px]" height="h-[300px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
-            <LiveRelative isLocked={isLocked} />
+            <LiveRelative isLocked={isLocked} showClassName={showClassName} />
           </WidgetBox>
 
           <WidgetBox title="Radar" width="w-[200px]" height="h-[280px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>

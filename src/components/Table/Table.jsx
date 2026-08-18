@@ -50,7 +50,7 @@ export const TableRow = ({ children, isPlayer, isPaceCar, className = '', ...pro
 export const TableHeadCell = ({ children, width = 'w-auto', align = 'text-left', title, className = '' }) => {
   const hasPx = className.includes('px-') || className.includes('p-');
   return (
-    <th className={`py-1 ${hasPx ? '' : 'px-2'} font-condensed text-[9px] font-normal text-brand-10/50 tracking-tight whitespace-nowrap align-middle ${width} ${align} ${className}`} title={title}>
+    <th className={`py-1 ${hasPx ? '' : 'px-2'} first:pl-2.5 last:pr-2.5 font-condensed text-[9px] font-normal text-brand-10/50 tracking-tight whitespace-nowrap align-middle ${width} ${align} ${className}`} title={title}>
       {children}
     </th>
   );
@@ -59,7 +59,7 @@ export const TableHeadCell = ({ children, width = 'w-auto', align = 'text-left',
 export const TableCell = ({ children, align = 'text-left', className = '', ...props }) => {
   const hasPx = className.includes('px-') || className.includes('p-');
   return (
-    <td className={`py-1 ${hasPx ? '' : 'px-2'} align-middle ${align} ${className}`} {...props}>
+    <td className={`py-1 ${hasPx ? '' : 'px-2'} first:pl-2.5 last:pr-2.5 align-middle ${align} ${className}`} {...props}>
       {children}
     </td>
   );
