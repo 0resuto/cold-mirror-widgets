@@ -47,14 +47,20 @@ export const TableRow = ({ children, isPlayer, isPaceCar, className = '', ...pro
   </motion.tr>
 );
 
-export const TableHeadCell = ({ children, width = 'w-auto', align = 'text-left', title, className = '' }) => (
-  <th className={`py-1 px-3 text-[10px] font-bold text-brand-10/60 uppercase tracking-wider ${width} ${align} ${className}`} title={title}>
-    {children}
-  </th>
-);
+export const TableHeadCell = ({ children, width = 'w-auto', align = 'text-left', title, className = '' }) => {
+  const hasPx = className.includes('px-') || className.includes('p-');
+  return (
+    <th className={`py-1 ${hasPx ? '' : 'px-2'} font-condensed text-[9px] font-normal text-brand-10/50 tracking-tight whitespace-nowrap align-middle ${width} ${align} ${className}`} title={title}>
+      {children}
+    </th>
+  );
+};
 
-export const TableCell = ({ children, align = 'text-left', className = '', ...props }) => (
-  <td className={`py-1 px-3 ${align} ${className}`} {...props}>
-    {children}
-  </td>
-);
+export const TableCell = ({ children, align = 'text-left', className = '', ...props }) => {
+  const hasPx = className.includes('px-') || className.includes('p-');
+  return (
+    <td className={`py-1 ${hasPx ? '' : 'px-2'} align-middle ${align} ${className}`} {...props}>
+      {children}
+    </td>
+  );
+};

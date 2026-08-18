@@ -1,20 +1,34 @@
 import React from 'react';
 import { intToHexColor, getContrastYIQ, getLicenseTheme } from '../utils/colorUtils';
 
-export function ClassBadge({ colorInt, shortName }) {
+export function ClassBadge({ colorInt, shortName, showName = false }) {
   const classBgColor = intToHexColor(colorInt);
   
+  if (!showName) {
+    return (
+      <div className="flex justify-center items-center" title={shortName}>
+        <div 
+          className="w-[3px] h-[18px] rounded-full" 
+          style={{ 
+            backgroundColor: classBgColor,
+            boxShadow: `0 0 6px ${classBgColor}88`
+          }} 
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center items-center">
       <div 
-        className="flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider whitespace-nowrap min-w-[4ch] bg-[#1e1e24] border border-brand-60/40 shadow-sm"
+        className="flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider whitespace-nowrap min-w-[3.5ch] bg-[#1e1e24] border border-brand-60/40 shadow-sm"
         title={shortName}
       >
         <div 
-          className="w-2 h-2 rounded-full" 
+          className="w-1 h-3 rounded-full" 
           style={{ 
             backgroundColor: classBgColor,
-            boxShadow: `0 0 5px ${classBgColor}`
+            boxShadow: `0 0 4px ${classBgColor}`
           }} 
         />
         <span className="text-white drop-shadow-sm">{shortName || 'CAR'}</span>

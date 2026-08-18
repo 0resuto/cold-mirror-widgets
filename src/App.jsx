@@ -43,22 +43,26 @@ const mockTelemetry = {
   CarLeftRight: 4,
   playerCarIdx: 1,
   grid: {
-    1: { LapDistPct: 0.5, Position: 2, ClassPosition: 1, Lap: 10, IsFastestLap: true, BestLapTime: 83.9, LastLapTime: 83.9 }, // Player (Middle)
-    2: { LapDistPct: 0.54, Position: 3, ClassPosition: 2, Lap: 10, F2Time: 12.5, BestLapTime: 84.2, LastLapTime: 84.5 }, // Right next to player ahead
-    3: { LapDistPct: 0.46, Position: 5, ClassPosition: 4, Lap: 10, HasDamage: true, F2Time: -15.2, BestLapTime: 84.3, LastLapTime: 102.1 }, // Right next to player behind
-    4: { LapDistPct: 0.1, Position: 6, ClassPosition: 5, Lap: 9, BestLapTime: 85.1, LastLapTime: 86.2 }, // Lapped car
-    5: { LapDistPct: 0.85, Position: 1, ClassPosition: 1, Lap: 11, BestLapTime: 84.1, LastLapTime: 85.0 }, // Ahead by a lap
-    6: { LapDistPct: 0.98, Position: 4, ClassPosition: 3, Lap: 10, OnPitRoad: true, BestLapTime: 84.5, LastLapTime: 95.2 } // Pitting
+    1: { LapDistPct: 0.5, Position: 3, ClassPosition: 1, Lap: 10, IsFastestLap: true, BestLapTime: 83.9, LastLapTime: 83.9 }, // Player (GT3)
+    2: { LapDistPct: 0.54, Position: 4, ClassPosition: 2, Lap: 10, F2Time: 1.2, BestLapTime: 84.2, LastLapTime: 84.5 }, // GT3
+    3: { LapDistPct: 0.46, Position: 6, ClassPosition: 3, Lap: 10, HasDamage: true, F2Time: -1.5, BestLapTime: 84.3, LastLapTime: 102.1 }, // GT3
+    4: { LapDistPct: 0.1, Position: 8, ClassPosition: 2, Lap: 9, BestLapTime: 89.1, LastLapTime: 90.2 }, // GT4
+    5: { LapDistPct: 0.85, Position: 1, ClassPosition: 1, Lap: 12, BestLapTime: 76.5, LastLapTime: 77.0 }, // GTP
+    6: { LapDistPct: 0.70, Position: 2, ClassPosition: 1, Lap: 11, BestLapTime: 79.8, LastLapTime: 80.2 }, // LMP2
+    7: { LapDistPct: 0.98, Position: 5, ClassPosition: 2, Lap: 11, OnPitRoad: true, BestLapTime: 80.1, LastLapTime: 95.2 }, // LMP2 (Pitting)
+    8: { LapDistPct: 0.35, Position: 7, ClassPosition: 1, Lap: 9, BestLapTime: 88.5, LastLapTime: 89.0 } // GT4
   }
 };
 
 const mockSessionDrivers = [
-  { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 6200, SR: 4.5, LicLevel: 4, LicString: 'A 4.5', CarClassShortName: "GT3", CarScreenNameShort: "Porsche 911", ClassPosition: 1, Position: 2 },
-  { CarIdx: 2, UserName: "Yuki Tsunoda 角田 裕毅", CarNumber: "22", IRating: 3800, SR: 3.2, LicLevel: 3, LicString: 'B 3.2', CarClassShortName: "GT3", CarScreenNameShort: "McLaren MP4", ClassPosition: 2, Position: 3 },
-  { CarIdx: 3, UserName: "Zhou Guanyu 周冠宇", CarNumber: "24", IRating: 1400, SR: 2.8, LicLevel: 1, LicString: 'D 2.8', CarClassShortName: "GT3", CarScreenNameShort: "Ferrari 296", ClassPosition: 4, Position: 5 },
-  { CarIdx: 4, UserName: "Алексей Смирнов", CarNumber: "14", IRating: 900, SR: 1.5, LicLevel: 0, LicString: 'R 1.5', CarClassShortName: "GT3", CarScreenNameShort: "Aston Martin", ClassPosition: 5, Position: 6 },
-  { CarIdx: 5, UserName: "Lewis Hamilton", CarNumber: "44", IRating: 7100, SR: 4.9, LicLevel: 4, LicString: 'A 4.9', CarClassShortName: "LMP2", CarScreenNameShort: "Dallara P217", ClassPosition: 1, Position: 1 },
-  { CarIdx: 6, UserName: "Oscar Piastri", CarNumber: "81", IRating: 2600, SR: 2.0, LicLevel: 2, LicString: 'C 2.0', CarClassShortName: "GT3", CarScreenNameShort: "McLaren MP4", ClassPosition: 3, Position: 4 },
+  { CarIdx: 1, UserName: "Max Verstappen", CarNumber: "1", IRating: 6200, SR: 4.5, LicLevel: 4, LicString: 'A 4.5', CarClassShortName: "GT3", CarClassColor: 0x34c759, CarScreenNameShort: "Porsche 911 GT3", ClassPosition: 1, Position: 3 },
+  { CarIdx: 2, UserName: "Yuki Tsunoda 角田 裕毅", CarNumber: "22", IRating: 3800, SR: 3.2, LicLevel: 3, LicString: 'B 3.2', CarClassShortName: "GT3", CarClassColor: 0x34c759, CarScreenNameShort: "Ferrari 296 GT3", ClassPosition: 2, Position: 4 },
+  { CarIdx: 3, UserName: "Zhou Guanyu 周冠宇", CarNumber: "24", IRating: 1400, SR: 2.8, LicLevel: 1, LicString: 'D 2.8', CarClassShortName: "GT3", CarClassColor: 0x34c759, CarScreenNameShort: "BMW M4 GT3", ClassPosition: 3, Position: 6 },
+  { CarIdx: 4, UserName: "Алексей Смирнов", CarNumber: "14", IRating: 1900, SR: 2.5, LicLevel: 2, LicString: 'C 2.5', CarClassShortName: "GT4", CarClassColor: 0xff9500, CarScreenNameShort: "Aston Martin GT4", ClassPosition: 2, Position: 8 },
+  { CarIdx: 5, UserName: "Lewis Hamilton", CarNumber: "44", IRating: 7100, SR: 4.9, LicLevel: 4, LicString: 'A 4.9', CarClassShortName: "GTP", CarClassColor: 0xff3b30, CarScreenNameShort: "Cadillac V-Series.R", ClassPosition: 1, Position: 1 },
+  { CarIdx: 6, UserName: "Fernando Alonso", CarNumber: "14", IRating: 6800, SR: 4.8, LicLevel: 4, LicString: 'A 4.8', CarClassShortName: "LMP2", CarClassColor: 0x007aff, CarScreenNameShort: "Dallara P217", ClassPosition: 1, Position: 2 },
+  { CarIdx: 7, UserName: "Oscar Piastri", CarNumber: "81", IRating: 3600, SR: 3.0, LicLevel: 3, LicString: 'B 3.0', CarClassShortName: "LMP2", CarClassColor: 0x007aff, CarScreenNameShort: "Dallara P217", ClassPosition: 2, Position: 5 },
+  { CarIdx: 8, UserName: "Lando Norris", CarNumber: "4", IRating: 4900, SR: 3.8, LicLevel: 3, LicString: 'B 3.8', CarClassShortName: "GT4", CarClassColor: 0xff9500, CarScreenNameShort: "McLaren Artura GT4", ClassPosition: 1, Position: 7 },
 ];
 
 const mockSessionData = {

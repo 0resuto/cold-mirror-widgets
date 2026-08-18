@@ -116,7 +116,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
 
       {/* Central car indicator (Player) */}
       <div 
-        className="w-10 bg-brand-30 rounded-md shadow-[0_0_15px_rgba(var(--brand-30-rgb),0.5)] border border-white/20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20"
+        className="w-10 rounded-md border-2 border-brand-30 shadow-[0_0_12px_rgba(230,57,70,0.4)] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20"
         style={{ height: '20%' }} // 20% of 25m range = 5 meters exact
       >
         <span className="text-[9px] text-white font-black tracking-widest">YOU</span>
@@ -166,7 +166,7 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
               opacity: 1 - Math.abs(car.distance) / (RADAR_RANGE_METERS * 1.2) // Fade out at edges
             }}
           >
-            <span className="text-[10px] text-black font-bold opacity-80 pb-6">{car.position}</span>
+            <span className="text-[10px] text-black font-bold opacity-90 leading-none">{car.position}</span>
           </div>
         );
       })}
@@ -186,9 +186,9 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
       ></div>
       
       {/* Header/Status */}
-      <div className="absolute top-3 left-0 w-full flex justify-center z-30">
-        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg transition-colors ${
-          (isLeft || isRight) ? 'bg-yellow-500 text-black' : 'bg-brand-bg/80 text-brand-10/50 border border-brand-60/50'
+      <div className="absolute top-3 left-0 w-full flex justify-center z-30 pointer-events-none">
+        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full transition-colors ${
+          (isLeft || isRight) ? 'bg-yellow-500 text-black shadow-lg' : 'text-brand-10/40'
         }`}>
           {(isLeft || isRight) ? 'BLIND SPOT' : 'CLEAR'}
         </span>

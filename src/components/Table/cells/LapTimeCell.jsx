@@ -5,7 +5,7 @@ import { formatLapTime } from '../../../utils/tableFormatters';
 export const LapTimeCell = memo(({ seconds, isPlayer, opacity = '', isSessionBest = false }) => {
   let textColorClass = isPlayer ? 'text-white' : `text-brand-10/${opacity || '90'}`;
   if (isSessionBest) {
-    textColorClass = 'text-purple-500 font-bold';
+    textColorClass = 'text-purple-400 font-bold';
   }
 
   return (

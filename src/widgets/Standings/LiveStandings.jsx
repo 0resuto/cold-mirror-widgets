@@ -5,9 +5,9 @@ import { LoadingState } from '../../components/LoadingState';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeadCell, TableCell, PosCell, DriverCell, GapCell, IratingCell, ClassCell, SafetyRatingCell, LapTimeCell } from '../../components/Table';
 import { getTrackPctText } from '../../utils/tableFormatters';
 
-const defaultStandingsColumns = { pos: true, num: true, driver: true, carName: false, carClass: true, classPos: true, srating: true, irating: true, gap: true, bestLap: false, lastLap: true, trackPct: false, laps: false };
+const defaultStandingsColumns = { pos: true, num: true, driver: true, carClass: true, carName: false, classPos: true, srating: true, irating: true, gap: true, bestLap: false, lastLap: true, trackPct: false, laps: false };
 
-export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = false, throttleMs = 250 }) => {
+export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = false, throttleMs = 250, showClassName = false }) => {
   const liveStore = useLiveStore();
   const [standings, setStandings] = useState([]);
   
@@ -38,6 +38,9 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
 
       const merged = [];
       for (const driver of sessionDrivers) {
+        // Skip Pace Car and Spectators
+        if (driver.IsPaceCar || driver.IsSpectator) continue;
+
         const idx = driver.CarIdx?.toString();
         const gridData = grid[idx];
         
@@ -61,6 +64,19 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
         }
       }
 
+      // Find best lap times in session
+      let minBestLap = sessionBestLapTime > 0 ? sessionBestLapTime : Infinity;
+      let minLastLap = Infinity;
+      for (const d of merged) {
+        if (d.bestLapTime > 0 && d.bestLapTime < minBestLap) minBestLap = d.bestLapTime;
+        if (d.lastLapTime > 0 && d.lastLapTime < minLastLap) minLastLap = d.lastLapTime;
+      }
+
+      for (const d of merged) {
+        d.isSessionBest = d.bestLapTime > 0 && d.bestLapTime === minBestLap;
+        d.isBestLastLap = d.lastLapTime > 0 && d.lastLapTime === minLastLap;
+      }
+
       // Sort by position (ignoring 0 which is usually invalid/spectator)
       merged.sort((a, b) => {
         if (a.pos === 0) return 1;
@@ -81,12 +97,12 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
   return (
     <TableContainer isLocked={isLocked}>
       <TableHead isLocked={isLocked}>
-        {columns.pos && <TableHeadCell width="w-8" align="text-center">POS</TableHeadCell>}
-        {columns.classPos && <TableHeadCell width="w-8" align="text-center" title="Class Position">C.POS</TableHeadCell>}
+        {columns.pos && <TableHeadCell width="w-px" align="text-center">Pos</TableHeadCell>}
+        {columns.classPos && <TableHeadCell width="w-px" align="text-center" title="Class Position">C.Pos</TableHeadCell>}
         {columns.num && <TableHeadCell width="w-8" align="text-center">#</TableHeadCell>}
         {columns.driver && <TableHeadCell width="w-full" className="min-w-[120px]">Driver</TableHeadCell>}
-        {columns.carName && <TableHeadCell width="w-24" align="text-center">Car</TableHeadCell>}
-        {columns.carClass && <TableHeadCell width="w-12" align="text-center">Class</TableHeadCell>}
+        {columns.carClass && <TableHeadCell width={showClassName ? 'w-12' : 'w-[9px]'} className={showClassName ? '' : 'px-[3px]'} align="text-center">{showClassName ? 'Class' : ''}</TableHeadCell>}
+        {columns.carName && <TableHeadCell width="w-24" align="text-left">Car</TableHeadCell>}
         {columns.srating && <TableHeadCell width="w-14" align="text-center">SR</TableHeadCell>}
         {columns.irating && <TableHeadCell width="w-14" align="text-center">IR</TableHeadCell>}
         {columns.gap && <TableHeadCell width="w-12" align="text-right">Gap</TableHeadCell>}
@@ -97,11 +113,10 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
       </TableHead>
       <TableBody>
         {standings.map((driver) => {
-          const isPaceCar = driver.IsPaceCar || driver.IsSpectator;
           const isPlayer = driver.isPlayer;
 
           return (
-            <TableRow key={driver.CarIdx} isPlayer={isPlayer} isPaceCar={isPaceCar}>
+            <TableRow key={driver.CarIdx} isPlayer={isPlayer}>
               {columns.pos && <PosCell pos={driver.pos} isPlayer={isPlayer} />}
               {columns.classPos && (
                 <TableCell align="text-center" className={`font-semibold ${isPlayer ? 'text-white' : 'text-brand-10/70'}`}>
@@ -114,19 +129,19 @@ export const LiveStandings = ({ columns = defaultStandingsColumns, isLocked = fa
                 </TableCell>
               )}
               {columns.driver && <DriverCell name={driver.UserName} isPlayer={isPlayer} maxWidth="max-w-[150px]" />}
+              {columns.carClass && <ClassCell colorInt={driver.CarClassColor} shortName={driver.CarClassShortName} showName={showClassName} />}
               {columns.carName && (
-                <TableCell align="text-center">
-                  <span className={`text-[10px] truncate max-w-[120px] inline-block ${isPlayer ? 'text-brand-10' : 'text-brand-10/80'}`} title={driver.CarScreenName || driver.CarScreenNameShort || driver.CarPath}>
+                <TableCell align="text-left">
+                  <span className={`text-[10px] truncate max-w-[120px] inline-block align-middle leading-tight ${isPlayer ? 'text-brand-10' : 'text-brand-10/80'}`} title={driver.CarScreenName || driver.CarScreenNameShort || driver.CarPath}>
                     {driver.CarScreenNameShort || driver.CarScreenName || driver.CarPath || 'Unknown'}
                   </span>
                 </TableCell>
               )}
-              {columns.carClass && <ClassCell colorInt={driver.CarClassColor} shortName={driver.CarClassShortName} />}
               {columns.srating && <SafetyRatingCell licLevel={driver.LicLevel} licString={driver.LicString} />}
               {columns.irating && <IratingCell irating={driver.IRating} isPlayer={isPlayer} />}
               {columns.gap && <GapCell gap={driver.f2Time} isPlayer={isPlayer} isStandings={true} />}
               {columns.bestLap && <LapTimeCell seconds={driver.bestLapTime} isPlayer={isPlayer} isSessionBest={driver.isSessionBest} />}
-              {columns.lastLap && <LapTimeCell seconds={driver.lastLapTime} isPlayer={isPlayer} opacity="70" />}
+              {columns.lastLap && <LapTimeCell seconds={driver.lastLapTime} isPlayer={isPlayer} opacity="70" isSessionBest={driver.isBestLastLap} />}
               {columns.laps && (
                 <TableCell align="text-right" className={`font-mono ${isPlayer ? 'text-white' : 'text-brand-10/70'}`}>
                   {driver.lap}
