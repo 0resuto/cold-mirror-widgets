@@ -43,14 +43,14 @@ const mockTelemetry = {
   CarLeftRight: 4,
   playerCarIdx: 1,
   grid: {
-    1: { LapDistPct: 0.5, Position: 3, ClassPosition: 1, Lap: 10, IsFastestLap: true, BestLapTime: 83.9, LastLapTime: 83.9 }, // Player (GT3)
-    2: { LapDistPct: 0.54, Position: 4, ClassPosition: 2, Lap: 10, F2Time: 1.2, BestLapTime: 84.2, LastLapTime: 84.5 }, // GT3
-    3: { LapDistPct: 0.46, Position: 6, ClassPosition: 3, Lap: 10, HasDamage: true, F2Time: -1.5, BestLapTime: 84.3, LastLapTime: 102.1 }, // GT3
-    4: { LapDistPct: 0.1, Position: 8, ClassPosition: 2, Lap: 9, BestLapTime: 89.1, LastLapTime: 90.2 }, // GT4
-    5: { LapDistPct: 0.85, Position: 1, ClassPosition: 1, Lap: 12, BestLapTime: 76.5, LastLapTime: 77.0 }, // GTP
-    6: { LapDistPct: 0.70, Position: 2, ClassPosition: 1, Lap: 11, BestLapTime: 79.8, LastLapTime: 80.2 }, // LMP2
-    7: { LapDistPct: 0.98, Position: 5, ClassPosition: 2, Lap: 11, OnPitRoad: true, BestLapTime: 80.1, LastLapTime: 95.2 }, // LMP2 (Pitting)
-    8: { LapDistPct: 0.35, Position: 7, ClassPosition: 1, Lap: 9, BestLapTime: 88.5, LastLapTime: 89.0 } // GT4
+    1: { LapDistPct: 0.5, Position: 3, ClassPosition: 1, Lap: 10, TrackSurface: 4, IsFastestLap: true, BestLapTime: 83.9, LastLapTime: 83.9 }, // Player (GT3) - OnTrack
+    2: { LapDistPct: 0.504, Position: 4, ClassPosition: 2, Lap: 10, TrackSurface: 4, F2Time: 1.2, BestLapTime: 84.2, LastLapTime: 84.5 }, // GT3 (~20m ahead) - OnTrack
+    3: { LapDistPct: 0.496, Position: 6, ClassPosition: 3, Lap: 10, TrackSurface: 4, HasDamage: true, F2Time: -1.5, BestLapTime: 84.3, LastLapTime: 102.1 }, // GT3 (~20m behind) - OnTrack
+    4: { LapDistPct: 0.1, Position: 8, ClassPosition: 2, Lap: 9, TrackSurface: 4, BestLapTime: 89.1, LastLapTime: 90.2 }, // GT4
+    5: { LapDistPct: 0.85, Position: 1, ClassPosition: 1, Lap: 12, TrackSurface: 4, BestLapTime: 76.5, LastLapTime: 77.0 }, // GTP
+    6: { LapDistPct: 0.70, Position: 2, ClassPosition: 1, Lap: 11, TrackSurface: 4, BestLapTime: 79.8, LastLapTime: 80.2 }, // LMP2
+    7: { LapDistPct: 0.98, Position: 5, ClassPosition: 2, Lap: 11, TrackSurface: 2, OnPitRoad: true, BestLapTime: 80.1, LastLapTime: 95.2 }, // LMP2 (Pitting) - InPitStall
+    8: { LapDistPct: 0.35, Position: 7, ClassPosition: 1, Lap: 9, TrackSurface: 4, BestLapTime: 88.5, LastLapTime: 89.0 } // GT4
   }
 };
 

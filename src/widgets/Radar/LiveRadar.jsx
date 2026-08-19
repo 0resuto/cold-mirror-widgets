@@ -5,6 +5,51 @@ import { LoadingState } from '../../components/LoadingState';
 
 const RADAR_RANGE_METERS = 30; // Zoomed in to show cars within 30 meters ahead/behind
 
+const TRACK_SURFACE = {
+  NOT_IN_WORLD: -1,
+  UNDEFINED: 0,
+  OFF_TRACK: 1,
+  IN_PIT_STALL: 2,
+  APPROACHING_PITS: 3,
+  ON_TRACK: 4,
+};
+
+/**
+ * Determines whether a car should be visible on the radar relative to the player based on iRacing TrackSurface.
+ *
+ * TrackSurface values:
+ * <= 0: NotInWorld (-1) / Undefined (0) - in garage / disconnected / out of session
+ * 1: OffTrack - grass, gravel, runoff
+ * 2: InPitStall - pit stall / pit stop / pit lane
+ * 3: AproachingPits - pit lane entry / exit transition zone
+ * 4: OnTrack - racing surface
+ */
+function isCarRadarVisible(playerSurface, carSurface) {
+  // Exclude cars or player if outside the world / in garage / disconnected
+  if (playerSurface <= 0 || carSurface <= 0) {
+    return false;
+  }
+
+  // Transition zone (Approaching Pits):
+  // - A car in AproachingPits is visible to both track and pit lane drivers
+  // - A player in AproachingPits sees both track and pit lane cars
+  if (playerSurface === TRACK_SURFACE.APPROACHING_PITS || carSurface === TRACK_SURFACE.APPROACHING_PITS) {
+    return true;
+  }
+
+  // Pit lane zone: player in pit stall only sees cars in pit stall
+  const isPlayerInPit = playerSurface === TRACK_SURFACE.IN_PIT_STALL;
+  const isCarInPit = carSurface === TRACK_SURFACE.IN_PIT_STALL;
+  if (isPlayerInPit || isCarInPit) {
+    return isPlayerInPit && isCarInPit;
+  }
+
+  // Track zone (OffTrack = 1, OnTrack = 4)
+  const isPlayerOnTrack = playerSurface === TRACK_SURFACE.OFF_TRACK || playerSurface === TRACK_SURFACE.ON_TRACK;
+  const isCarOnTrack = carSurface === TRACK_SURFACE.OFF_TRACK || carSurface === TRACK_SURFACE.ON_TRACK;
+  return isPlayerOnTrack && isCarOnTrack;
+}
+
 export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false }) {
   const liveStore = useLiveStore();
   const [radarState, setRadarState] = useState({
@@ -45,28 +90,39 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
       const nearbyCars = [];
 
       if (player) {
-        Object.keys(grid).forEach(idx => {
-          if (parseInt(idx) === driverCarIdx) return;
-          
-          const car = grid[idx];
-          if (!car.LapDistPct && car.LapDistPct !== 0) return;
-          if (car.OnPitRoad) return;
+        const playerSurface = player.TrackSurface !== undefined
+          ? player.TrackSurface
+          : (player.OnPitRoad ? TRACK_SURFACE.IN_PIT_STALL : TRACK_SURFACE.ON_TRACK);
 
-          let delta = car.LapDistPct - player.LapDistPct;
-          
-          if (delta > 0.5) delta -= 1;
-          if (delta < -0.5) delta += 1;
+        if (playerSurface > 0) {
+          Object.keys(grid).forEach(idx => {
+            if (parseInt(idx) === driverCarIdx) return;
+            
+            const car = grid[idx];
+            if (car.LapDistPct === undefined || car.LapDistPct === null || isNaN(car.LapDistPct)) return;
 
-          const distanceMeters = delta * trackLengthMeters;
+            const carSurface = car.TrackSurface !== undefined
+              ? car.TrackSurface
+              : (car.OnPitRoad ? TRACK_SURFACE.IN_PIT_STALL : TRACK_SURFACE.ON_TRACK);
 
-          if (Math.abs(distanceMeters) <= rangeMeters) {
-            nearbyCars.push({
-              id: idx,
-              distance: distanceMeters,
-              position: car.Position
-            });
-          }
-        });
+            if (!isCarRadarVisible(playerSurface, carSurface)) return;
+
+            let delta = car.LapDistPct - player.LapDistPct;
+            
+            if (delta > 0.5) delta -= 1;
+            if (delta < -0.5) delta += 1;
+
+            const distanceMeters = delta * trackLengthMeters;
+
+            if (Math.abs(distanceMeters) <= rangeMeters) {
+              nearbyCars.push({
+                id: idx,
+                distance: distanceMeters,
+                position: car.Position
+              });
+            }
+          });
+        }
       }
 
       setRadarState({
@@ -184,15 +240,6 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
           isRight ? 'bg-gradient-to-l from-yellow-500/40 to-transparent opacity-100' : 'opacity-0'
         }`}
       ></div>
-      
-      {/* Header/Status */}
-      <div className="absolute top-3 left-0 w-full flex justify-center z-30 pointer-events-none">
-        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full transition-colors ${
-          (isLeft || isRight) ? 'bg-yellow-500 text-black shadow-lg' : 'text-brand-10/40'
-        }`}>
-          {(isLeft || isRight) ? 'BLIND SPOT' : 'CLEAR'}
-        </span>
-      </div>
     </div>
   );
 }
