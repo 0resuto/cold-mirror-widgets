@@ -60,13 +60,9 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
 
   useEffect(() => {
     let lastUpdateTime = 0;
-    
-    const unsubscribe = liveStore.subscribe((state) => {
-      const now = performance.now();
-      if (now - lastUpdateTime < throttleMs) return;
-      lastUpdateTime = now;
 
-      const latestData = state.latestTelemetry;
+    const processState = (state) => {
+      const latestData = state?.latestTelemetry;
       if (!latestData || !latestData.grid) {
         setHasData(false);
         return;
@@ -75,11 +71,11 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
 
       const driverCarIdx = state.driverCarIdx ?? latestData?.playerCarIdx ?? null;
       let trackLengthMeters = 4000;
-      if (typeof state.trackLength === 'number') {
+      if (typeof state.trackLength === 'number' && state.trackLength > 0) {
         trackLengthMeters = state.trackLength;
       } else if (typeof state.trackLength === 'string') {
         const parsed = parseFloat(state.trackLength);
-        if (!isNaN(parsed)) {
+        if (!isNaN(parsed) && parsed > 0) {
           trackLengthMeters = state.trackLength.includes('km') ? parsed * 1000 : parsed;
         }
       }
@@ -129,7 +125,16 @@ export function LiveRadar({ rangeMeters = 30, throttleMs = 33, isLocked = false 
         carLeftRight: latestData.CarLeftRight || 0,
         nearbyCars
       });
+    };
 
+    // Process initial state on mount
+    processState(liveStore.getState());
+
+    const unsubscribe = liveStore.subscribe((state) => {
+      const now = performance.now();
+      if (now - lastUpdateTime < throttleMs) return;
+      lastUpdateTime = now;
+      processState(state);
     });
 
     return () => unsubscribe();

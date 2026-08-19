@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import { TelemetryProvider } from './context/TelemetryContext';
 
 import { LiveFuel } from './widgets/Fuel/LiveFuel';
@@ -10,6 +11,7 @@ import { LiveRadar } from './widgets/Radar/LiveRadar';
 import { LiveStandings } from './widgets/Standings/LiveStandings';
 import { LiveRelative } from './widgets/Relative/LiveRelative';
 import { LinearTrackMap } from './widgets/TrackMap/LinearTrackMap';
+import { RadarMockDrawer } from './playground/RadarMockDrawer';
 
 // Comprehensive mock data so all widgets can render at least something
 const mockTelemetry = {
@@ -73,9 +75,35 @@ const mockSessionData = {
   }
 };
 
-const WidgetBox = ({ children, title, isLocked, widgetOpacity, bgOpacity, width = "w-[300px]", height = "h-[200px]" }) => (
+const WidgetBox = ({ children, title, isLocked, widgetOpacity, bgOpacity, width = "w-[300px]", height = "h-[200px]", onOpenSettings, isSettingsActive, badge }) => (
   <div className="flex flex-col gap-2">
-    <span className={`text-xs font-bold text-brand-10 uppercase tracking-widest transition-opacity ${isLocked ? 'opacity-0' : 'opacity-100'}`}>{title}</span>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <span className={`text-xs font-bold text-brand-10 uppercase tracking-widest transition-opacity ${isLocked ? 'opacity-0' : 'opacity-100'}`}>{title}</span>
+        {badge && !isLocked && (
+          <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border leading-none ${
+            badge === 'MANUAL' 
+              ? 'bg-brand-30/20 text-brand-30 border-brand-30/40' 
+              : 'bg-white/10 text-white/50 border-white/10'
+          }`}>
+            {badge}
+          </span>
+        )}
+      </div>
+      {onOpenSettings && !isLocked && (
+        <button
+          onClick={onOpenSettings}
+          title={`Configure ${title} Mock Data`}
+          className={`p-1 rounded-md transition-all cursor-pointer ${
+            isSettingsActive 
+              ? 'text-brand-30 bg-white/10 ring-1 ring-brand-30/40' 
+              : 'text-brand-10/50 hover:text-brand-30 hover:bg-white/10'
+          }`}
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
     <div 
       className={`${width} ${height} ${isLocked ? '' : 'resize'} rounded-lg relative flex items-center justify-center min-w-[100px] min-h-[50px] transition-colors duration-300 ${
         !isLocked 
@@ -96,8 +124,26 @@ const WidgetBox = ({ children, title, isLocked, widgetOpacity, bgOpacity, width 
   </div>
 );
 
+// Dedicated default mock telemetry for Radar manual mode
+const defaultRadarMockTelemetry = {
+  CarLeftRight: 0,
+  playerCarIdx: 1,
+  grid: {
+    1: { LapDistPct: 0.5, Position: 3, ClassPosition: 1, Lap: 10, TrackSurface: 4, IsFastestLap: true, BestLapTime: 83.9, LastLapTime: 83.9 },
+    2: { LapDistPct: 0.5036, Position: 2, ClassPosition: 1, Lap: 10, TrackSurface: 4, side: 'left', F2Time: 1.2, BestLapTime: 84.2, LastLapTime: 84.5 }, // ~18m ahead
+    3: { LapDistPct: 0.497, Position: 4, ClassPosition: 2, Lap: 10, TrackSurface: 4, side: 'right', HasDamage: true, F2Time: -1.5, BestLapTime: 84.3, LastLapTime: 102.1 }, // ~15m behind
+  }
+};
+
 function App() {
   const [useMockData, setUseMockData] = useState(false);
+  
+  // Isolated Radar Mock State
+  const [radarMode, setRadarMode] = useState('manual'); // 'auto' (Global Sim) | 'manual' (Custom Mock)
+  const [radarTelemetry, setRadarTelemetry] = useState(defaultRadarMockTelemetry);
+  const [radarTrackLength, setRadarTrackLength] = useState(5000);
+  const [isRadarDrawerOpen, setIsRadarDrawerOpen] = useState(false);
+
   const [isLocked, setIsLocked] = useState(false);
   const [groupByClass, setGroupByClass] = useState(false);
   const [showClassName, setShowClassName] = useState(false);
@@ -105,11 +151,18 @@ function App() {
   const [inactiveOpacity, setInactiveOpacity] = useState(30);
   const [bgOpacity, setBgOpacity] = useState(60);
 
-  const telemetry = useMockData ? mockTelemetry : null;
+  const globalTelemetry = useMockData ? mockTelemetry : null;
+
+  const handleToggleRadarDrawer = () => {
+    if (!useMockData && !isRadarDrawerOpen) {
+      setUseMockData(true);
+    }
+    setIsRadarDrawerOpen((prev) => !prev);
+  };
 
   return (
     <TelemetryProvider 
-      telemetry={telemetry} 
+      telemetry={globalTelemetry} 
       sessionDrivers={useMockData ? mockSessionDrivers : []}
       sessionData={useMockData ? mockSessionData : null}
       trackLength={useMockData ? 5000 : 0}
@@ -220,8 +273,29 @@ function App() {
             <LiveRelative isLocked={isLocked} showClassName={showClassName} />
           </WidgetBox>
 
-          <WidgetBox title="Radar" width="w-[200px]" height="h-[280px]" isLocked={isLocked} widgetOpacity={widgetOpacity} bgOpacity={bgOpacity}>
-            <LiveRadar isLocked={isLocked} />
+          <WidgetBox 
+            title="Radar" 
+            width="w-[200px]" 
+            height="h-[280px]" 
+            isLocked={isLocked} 
+            widgetOpacity={widgetOpacity} 
+            bgOpacity={bgOpacity}
+            onOpenSettings={handleToggleRadarDrawer}
+            isSettingsActive={isRadarDrawerOpen}
+            badge={radarMode === 'manual' ? 'MANUAL' : undefined}
+          >
+            {radarMode === 'manual' ? (
+              <TelemetryProvider
+                telemetry={useMockData ? radarTelemetry : null}
+                sessionDrivers={useMockData ? mockSessionDrivers : []}
+                sessionData={useMockData ? mockSessionData : null}
+                trackLength={useMockData ? radarTrackLength : 0}
+              >
+                <LiveRadar isLocked={isLocked} />
+              </TelemetryProvider>
+            ) : (
+              <LiveRadar isLocked={isLocked} />
+            )}
           </WidgetBox>
 
         </div>
@@ -247,6 +321,22 @@ function App() {
             <DigitalDash isLocked={isLocked} />
           </WidgetBox>
         </div>
+
+        {/* Radar Mock Settings Side Drawer */}
+        <RadarMockDrawer
+          isOpen={isRadarDrawerOpen}
+          onClose={() => setIsRadarDrawerOpen(false)}
+          mode={radarMode}
+          onModeChange={setRadarMode}
+          telemetry={radarTelemetry}
+          onUpdateTelemetry={setRadarTelemetry}
+          trackLength={radarTrackLength}
+          onUpdateTrackLength={setRadarTrackLength}
+          onResetDefault={() => {
+            setRadarTelemetry(defaultRadarMockTelemetry);
+            setRadarTrackLength(5000);
+          }}
+        />
 
       </div>
     </TelemetryProvider>
